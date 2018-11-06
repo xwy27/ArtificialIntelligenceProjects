@@ -2,6 +2,11 @@
 
 人工智能课程项目
 
+## 项目要求
+
+1. python >= 3.6
+1. pip install -r requirements.txt
+
 ## Simulated Annealing(模拟退火)
 
 在 [TSPLIB](http://comopt.ifi.uni-heidelberg.de/software/TSPLIB95/)，(*其他网站还可以找到有趣的art TSP 和 national TSP*)中选一个大于100个城市数的TSP问题
