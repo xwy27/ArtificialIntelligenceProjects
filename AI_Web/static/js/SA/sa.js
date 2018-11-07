@@ -27,8 +27,8 @@ let data = {
 //  x: [xxx,xxx,xxx],
 //  y: [xxx,xxx,xxx]
 // }
-function generateChart(chartData) {
-  let myChart = echarts.init(document.getElementById(chartData.title+'-chart'));
+function generateChart(chartData, chartId) {
+  let myChart = echarts.init(document.getElementById(chartId+'-chart'));
 
   let option = {
     title: {
@@ -36,27 +36,49 @@ function generateChart(chartData) {
     },
     tooltip: {},
     xAxis: {
-        type: 'category',
-        data: chartData.x
-    },
-    yAxis: {
         type: 'value',
-        splitLine: false
+        splitLine: false,
+        show: false
+      },
+      yAxis: {
+        type: 'value',
+        splitLine: false,
+        show: false
     },
     series: [{
-        data: chartData.y,
+        data: chartData.coordinate,
         type: 'line'
-    }]
+    }],
+    animationDelay: function(idx) {
+      return idx * 10000;
+    }
   };
 
   myChart.setOption(option);
 }
 
+let generate = false;
+let origin = {};
+$(document).ready(() => {
+  $.ajax({
+    url: 'api/SA_origin',
+    data: '',
+    type: 'GET',
+    async: false,
+    success: (res) => {
+      console.log(res['origin']);
+      origin = res['origin'];
+      generateChart(origin, 'part1');
+    }
+  });
+})
+
 // Show chart when tab changes
-generateChart(data["part1"]);
 $('.tabular.menu .item').tab({
   onVisible: (tabPath) => {
-    console.log(tabPath)
-    generateChart(data[tabPath]);
+    echarts.dispose(document.getElementById(tabPath + '-chart'));
+    // TODO: get Data if generate is true
+    let data = generate ? data[tabPath] : origin;
+    generateChart(data, tabPath);
   }
 });
