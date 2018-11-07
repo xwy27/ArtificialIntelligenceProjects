@@ -1,0 +1,58 @@
+/* Title bar */
+#AstarTitle .container {
+  padding-top: 20px;
+}
+
+#AstarTitle .container>.button {
+  margin-bottom: 20px;
+}
+
+/* Content */
+.grid{
+  margin-top: 50px !important;
+}
+
+.image {
+  background-color: antiquewhite;
+  height: 600px;
+  display: flex !important;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.image>div {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.part {
+  width: 100px;
+  height: 100px;
+  margin: 5px;
+  background-color: aqua;
+}
+
+.part:hover {
+  box-shadow: 1px 1px 1px #000000;
+}
+
+.open {
+  background-color: antiquewhite;
+}
+
+.content {
+  background-color: aqua;
+  width: 100%;
+  height: 100%;
+  text-align: left;
+}
+
+.content>p {
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 20px;
+  font-weight: bold;
+  margin: 0;
+}

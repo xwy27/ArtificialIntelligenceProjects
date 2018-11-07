@@ -1,7 +1,9 @@
+/* Title bar */
 #SATitle .container {
   padding-top: 20px;
 }
 
+/* Content */
 .chart>.row>.column {
   /* background-color: darkkhaki; */
   height: 550px;
