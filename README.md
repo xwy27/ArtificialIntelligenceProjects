@@ -21,7 +21,7 @@ python >= 3.0
       cd AI_Web
       python manage.py makemigrations # 生成新增数据表命令，第一个新增的人运行即可
       python manage.py migrate # 运行新增数据表命令，所有人均需运行
-      python manage.py < init.py
+      python manage.py shell < init.py
       ```
     - 启动本地服务器
       ```shell
