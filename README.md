@@ -4,15 +4,40 @@
 
 ## 项目要求
 
-1. python >= 3.6
-1. pip install -r requirements.txt
+### 环境
+
+python >= 3.0
+
+###启动方法：
+
+1. 初次启动
+    - 安装依赖
+      ```shell
+      cd ArtificialIntelligenceProjects
+      pip install -r requirements.txt
+      ```
+    - 同步数据库
+      ```shell
+      cd AI_Web
+      python manage.py makemigrations # 生成新增数据表命令，第一个新增的人运行即可
+      python manage.py migrate # 运行新增数据表命令，所有人均需运行
+      python manage.py < init.py
+      ```
+    - 启动本地服务器
+      ```shell
+      python manage.py runserver
+      ```
+1. 后续启动
+    ```shell
+    python manage.py runserver
+    ```
 
 ## Simulated Annealing(模拟退火)
 
 在 [TSPLIB](http://comopt.ifi.uni-heidelberg.de/software/TSPLIB95/)，(*其他网站还可以找到有趣的art TSP 和 national TSP*)中选一个大于100个城市数的TSP问题
 1. 采用多种邻域操作的局部搜索 local search 策略求解；
-1. 在局部搜索策略的基础上，加入模拟退火 simulated annealing 策略，并比较两者的效果；
-1. 要求求得的解不要超过最优值的10％，并能够提供可视化，观察路径的变化和交叉程度。
+2. 在局部搜索策略的基础上，加入模拟退火 simulated annealing 策略，并比较两者的效果；
+3. 要求求得的解不要超过最优值的10％，并能够提供可视化，观察路径的变化和交叉程度。
 
 ## A* Algorithm
 
