@@ -1,4 +1,5 @@
 import math, copy, random
+from datetime import datetime
 # from ..models import *
 
 # Get data from database
@@ -26,11 +27,12 @@ def getNeighborFieldSwitch2(listOfCities):
     - listOfCities: path of traveling cities
   '''
   semiResult = []
-  for x in range(1, len(listOfCities) - 2):
-    for y in range(x + 1, len(listOfCities) - 1):
-      semiList = copy.deepcopy(listOfCities)
-      semiList[x], semiList[y] = semiList[y], semiList[x]
-      semiResult.append(semiList)
+  for _ in range(0, 1000):
+    x = random.randint(1, len(listOfCities) - 2)
+    y = random.randint(1, len(listOfCities) - 2)
+    semiList = copy.deepcopy(listOfCities)
+    semiList[x], semiList[y] = semiList[y], semiList[x]
+    semiResult.append(semiList)
   return semiResult
 
 def getNeighborFieldSwitch3(listOfCities):
@@ -40,10 +42,14 @@ def getNeighborFieldSwitch3(listOfCities):
     - listOfCities: path of traveling cities
   '''
   semiResult = []
-  for x in range(3, len(listOfCities) - 1):
-    semiList = copy.deepcopy(listOfCities)
-    semiList[x-2], semiList[x-1], semiList[x] = semiList[x], semiList[x-2], semiList[x-1]
-    semiResult.append(semiList)
+  for _ in range(0, 1000):
+    x = random.randint(1, len(listOfCities) - 2)
+    y = random.randint(1, len(listOfCities) - 2)
+    z = random.randint(1, len(listOfCities) - 2)
+    if x != y and y != z and z != x:
+      semiList = copy.deepcopy(listOfCities)
+      semiList[z], semiList[y], semiList[x] = semiList[x], semiList[z], semiList[y]
+      semiResult.append(semiList)
   return semiResult
 
 def getNeighborFieldSwitch4(listOfCities):
@@ -53,9 +59,29 @@ def getNeighborFieldSwitch4(listOfCities):
     - listOfCities: path of traveling cities
   '''
   semiResult = []
-  for x in range(2, len(listOfCities) - 1):
-    semiList = listOfCities[x:] + listOfCities[:x]
+  for _ in range(0, 1000):
+    x = random.randint(1, len(listOfCities) - 2)
+    semiList = [1] + listOfCities[x:len(listOfCities) - 1] + listOfCities[1:x] + [1]
     semiResult.append(semiList)
+    y = random.randint(x, len(listOfCities) - 2)
+    temp = listOfCities[x:y]
+    temp.reverse()
+    semiList = listOfCities[:x] + temp + listOfCities[y:]
+    semiResult.append(semiList)
+
+  return semiResult
+
+def getNeighborFieldRandom(listOfCities):
+  '''
+  getNeighborFieldSwitch4: return the neighbor field of current result
+    generated with roll the order of the whole list
+    - listOfCities: path of traveling cities
+  '''
+  semiResult = []
+  for _ in range(0, 1000):
+    semiList = listOfCities[1:-1]
+    random.Random(datetime.now()).shuffle(semiList)
+    semiResult.append([1] + semiList + [1])
   return semiResult
 
 def climb(listOfCities):
@@ -65,25 +91,33 @@ def climb(listOfCities):
   bestScore = evaluate(listOfCities)
 
   semiResult1 = getNeighborFieldSwitch2(listOfCities)
+  semiResult2 = getNeighborFieldSwitch3(listOfCities)
+  semiResult3 = getNeighborFieldSwitch4(listOfCities)
+  # semiResult4 = getNeighborFieldRandom(listOfCities)
+
   for semiResult in semiResult1:
     tempScore = evaluate(semiResult)
     if tempScore < bestScore:
       bestScore = tempScore
       listOfCities = semiResult
   
-  semiResult2 = getNeighborFieldSwitch3(listOfCities)
   for semiResult in semiResult2:
     tempScore = evaluate(semiResult)
     if tempScore < bestScore:
       bestScore = tempScore
       listOfCities = semiResult
 
-  semiResult3 = getNeighborFieldSwitch4(listOfCities)
   for semiResult in semiResult3:
     tempScore = evaluate(semiResult)
     if tempScore < bestScore:
       bestScore = tempScore
       listOfCities = semiResult
+  
+  # for semiResult in semiResult4:
+  #   tempScore = evaluate(semiResult)
+  #   if tempScore < bestScore:
+  #     bestScore = tempScore
+  #     listOfCities = semiResult
   
   return listOfCities, bestScore
 
@@ -105,7 +139,11 @@ result.append(1)
 
 print(evaluate(result))
 
-for counter in range(1, 1001):
+for counter in range(1, 400):
   result, bestScore = climb(result)
-  print(str(counter/10) + '%')
+  print(str(counter/4) + '%')
   print('Current score: ' + str(bestScore))
+
+print('100%')
+print('Final Score: ' + str(bestScore))
+print(result)
