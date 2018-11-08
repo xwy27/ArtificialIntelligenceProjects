@@ -1,4 +1,4 @@
-import math, copy, random
+import math, copy, random, sys, time
 from datetime import datetime
 # from ..models import *
 
@@ -27,12 +27,11 @@ def getNeighborFieldSwitch2(listOfCities):
     - listOfCities: path of traveling cities
   '''
   semiResult = []
-  for _ in range(0, 1000):
-    x = random.randint(1, len(listOfCities) - 2)
-    y = random.randint(1, len(listOfCities) - 2)
-    semiList = copy.deepcopy(listOfCities)
-    semiList[x], semiList[y] = semiList[y], semiList[x]
-    semiResult.append(semiList)
+  x = random.randint(1, len(listOfCities) - 2)
+  y = random.randint(1, len(listOfCities) - 2)
+  semiList = copy.deepcopy(listOfCities)
+  semiList[x], semiList[y] = semiList[y], semiList[x]
+  semiResult.append(semiList)
   return semiResult
 
 def getNeighborFieldSwitch3(listOfCities):
@@ -42,14 +41,13 @@ def getNeighborFieldSwitch3(listOfCities):
     - listOfCities: path of traveling cities
   '''
   semiResult = []
-  for _ in range(0, 1000):
-    x = random.randint(1, len(listOfCities) - 2)
-    y = random.randint(1, len(listOfCities) - 2)
-    z = random.randint(1, len(listOfCities) - 2)
-    if x != y and y != z and z != x:
-      semiList = copy.deepcopy(listOfCities)
-      semiList[z], semiList[y], semiList[x] = semiList[x], semiList[z], semiList[y]
-      semiResult.append(semiList)
+  x = random.randint(1, len(listOfCities) - 2)
+  y = random.randint(1, len(listOfCities) - 2)
+  z = random.randint(1, len(listOfCities) - 2)
+  if x != y and y != z and z != x:
+    semiList = copy.deepcopy(listOfCities)
+    semiList[z], semiList[y], semiList[x] = semiList[x], semiList[z], semiList[y]
+    semiResult.append(semiList)
   return semiResult
 
 def getNeighborFieldSwitch4(listOfCities):
@@ -59,15 +57,14 @@ def getNeighborFieldSwitch4(listOfCities):
     - listOfCities: path of traveling cities
   '''
   semiResult = []
-  for _ in range(0, 1000):
-    x = random.randint(1, len(listOfCities) - 2)
-    semiList = [1] + listOfCities[x:len(listOfCities) - 1] + listOfCities[1:x] + [1]
-    semiResult.append(semiList)
-    y = random.randint(x, len(listOfCities) - 2)
-    temp = listOfCities[x:y]
-    temp.reverse()
-    semiList = listOfCities[:x] + temp + listOfCities[y:]
-    semiResult.append(semiList)
+  x = random.randint(1, len(listOfCities) - 2)
+  semiList = [1] + listOfCities[x:len(listOfCities) - 1] + listOfCities[1:x] + [1]
+  semiResult.append(semiList)
+  y = random.randint(x, len(listOfCities) - 2)
+  temp = listOfCities[x:y]
+  temp.reverse()
+  semiList = listOfCities[:x] + temp + listOfCities[y:]
+  semiResult.append(semiList)
 
   return semiResult
 
@@ -78,47 +75,82 @@ def getNeighborFieldRandom(listOfCities):
     - listOfCities: path of traveling cities
   '''
   semiResult = []
-  for _ in range(0, 1000):
-    semiList = listOfCities[1:-1]
-    random.Random(datetime.now()).shuffle(semiList)
-    semiResult.append([1] + semiList + [1])
+  semiList = listOfCities[1:-1]
+  random.Random(datetime.now()).shuffle(semiList)
+  semiResult.append([1] + semiList + [1])
   return semiResult
 
-def climb(listOfCities):
+compareCounter = 0
+temperature = 1800
+
+def saClimb(listOfCities):
   '''
   climb: climbing
   '''
+  global compareCounter
+  global temperature
   bestScore = evaluate(listOfCities)
 
+  
+
   semiResult1 = getNeighborFieldSwitch2(listOfCities)
-  semiResult2 = getNeighborFieldSwitch3(listOfCities)
-  semiResult3 = getNeighborFieldSwitch4(listOfCities)
-  # semiResult4 = getNeighborFieldRandom(listOfCities)
-
   for semiResult in semiResult1:
+    compareCounter = compareCounter + 1
     tempScore = evaluate(semiResult)
-    if tempScore < bestScore:
+    deltaE = (tempScore - bestScore) 
+    if deltaE < 0:
       bestScore = tempScore
       listOfCities = semiResult
+    elif temperature != 0:
+      r = random.random()
+      if r < math.exp(-1 * deltaE / temperature):
+        bestScore = tempScore
+        listOfCities = semiResult
   
+  semiResult2 = getNeighborFieldSwitch3(listOfCities)
   for semiResult in semiResult2:
+    compareCounter = compareCounter + 1
     tempScore = evaluate(semiResult)
-    if tempScore < bestScore:
+    deltaE = (tempScore - bestScore) 
+    if deltaE < 0:
       bestScore = tempScore
       listOfCities = semiResult
+    elif temperature != 0:
+      r = random.random()
+      if r < math.exp(-1 * deltaE / temperature):
+        bestScore = tempScore
+        listOfCities = semiResult
 
+  semiResult3 = getNeighborFieldSwitch4(listOfCities)
   for semiResult in semiResult3:
+    compareCounter = compareCounter + 1
     tempScore = evaluate(semiResult)
-    if tempScore < bestScore:
+    deltaE = (tempScore - bestScore) 
+    if deltaE < 0:
       bestScore = tempScore
       listOfCities = semiResult
-  
+    elif temperature != 0:
+      r = random.random()
+      if r < math.exp(-1 * deltaE / temperature):
+        bestScore = tempScore
+        listOfCities = semiResult
+
+  # semiResult4 = getNeighborFieldRandom(listOfCities)
   # for semiResult in semiResult4:
+  #   compareCounter = compareCounter + 1
   #   tempScore = evaluate(semiResult)
-  #   if tempScore < bestScore:
+  #   deltaE = (tempScore - bestScore) 
+  #   if deltaE < 0:
   #     bestScore = tempScore
   #     listOfCities = semiResult
-  
+  #   elif temperature != 0:
+  #     r = random.random()
+  #     if r < math.exp(-1 * deltaE / temperature):
+  #       bestScore = tempScore
+  #       listOfCities = semiResult
+
+  if temperature > 0:
+    temperature = temperature * 0.999986
   return listOfCities, bestScore
 
 
@@ -137,13 +169,26 @@ for pointX in points:
 result = [x for x in range(1, len(points) + 1)]
 result.append(1)
 
-print(evaluate(result))
+print('Initial score: ' + str(evaluate(result)) + '\n')
+for x in range(0, 3):
+  sys.stdout.write('\033[F\033[K')
+  print(str(3 - x) + ' seconds to start local search...')
+  time.sleep(1)
+  
+sys.stdout.write('\033[F\033[K')
+print('-------Start local search-------\n\n\n\n')
+
 
 for counter in range(1, 400):
-  result, bestScore = climb(result)
-  print(str(counter/4) + '%')
+  for _ in range(1000):
+    result, bestScore = saClimb(result)
+  sys.stdout.write('\033[F\033[K\033[F\033[K\033[F\033[K\033[F\033[K')
+  print('Processing: ' + str(counter/4) + '%')
+  print('Temprature: ' + str(temperature))
+  print(str(compareCounter) + ' times of operations has been taken.')
   print('Current score: ' + str(bestScore))
 
-print('100%')
+sys.stdout.write('\033[F\033[K\033[F\033[K\033[F\033[K\033[F\033[K')
+print('Process finished: 100%')
+print(str(compareCounter) + ' times of operations has been taken in total.')
 print('Final Score: ' + str(bestScore))
-print(result)

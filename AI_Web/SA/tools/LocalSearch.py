@@ -1,4 +1,4 @@
-import math, copy, random
+import math, copy, random, sys, time
 from datetime import datetime
 # from ..models import *
 
@@ -84,40 +84,46 @@ def getNeighborFieldRandom(listOfCities):
     semiResult.append([1] + semiList + [1])
   return semiResult
 
+compareCounter = 0
+
 def climb(listOfCities):
   '''
   climb: climbing
   '''
+  global compareCounter
   bestScore = evaluate(listOfCities)
 
   semiResult1 = getNeighborFieldSwitch2(listOfCities)
   semiResult2 = getNeighborFieldSwitch3(listOfCities)
   semiResult3 = getNeighborFieldSwitch4(listOfCities)
-  # semiResult4 = getNeighborFieldRandom(listOfCities)
+  semiResult4 = getNeighborFieldRandom(listOfCities)
 
   for semiResult in semiResult1:
+    compareCounter = compareCounter + 1
     tempScore = evaluate(semiResult)
     if tempScore < bestScore:
       bestScore = tempScore
       listOfCities = semiResult
   
   for semiResult in semiResult2:
+    compareCounter = compareCounter + 1
     tempScore = evaluate(semiResult)
     if tempScore < bestScore:
       bestScore = tempScore
       listOfCities = semiResult
 
   for semiResult in semiResult3:
+    compareCounter = compareCounter + 1
     tempScore = evaluate(semiResult)
     if tempScore < bestScore:
       bestScore = tempScore
       listOfCities = semiResult
   
-  # for semiResult in semiResult4:
-  #   tempScore = evaluate(semiResult)
-  #   if tempScore < bestScore:
-  #     bestScore = tempScore
-  #     listOfCities = semiResult
+  for semiResult in semiResult4:
+    tempScore = evaluate(semiResult)
+    if tempScore < bestScore:
+      bestScore = tempScore
+      listOfCities = semiResult
   
   return listOfCities, bestScore
 
@@ -137,13 +143,24 @@ for pointX in points:
 result = [x for x in range(1, len(points) + 1)]
 result.append(1)
 
-print(evaluate(result))
+print('Initial score: ' + str(evaluate(result)) + '\n')
+for x in range(0, 3):
+  sys.stdout.write('\033[F\033[K')
+  print(str(3 - x) + ' seconds to start local search...')
+  time.sleep(1)
+  
+sys.stdout.write('\033[F\033[K')
+print('-------Start local search-------\n\n\n')
+
 
 for counter in range(1, 400):
   result, bestScore = climb(result)
-  print(str(counter/4) + '%')
+  sys.stdout.write('\033[F\033[K\033[F\033[K\033[F\033[K')
+  print('Processing: ' + str(counter/4) + '%')
+  print(str(compareCounter) + ' times of operations has been taken.')
   print('Current score: ' + str(bestScore))
 
-print('100%')
+sys.stdout.write('\033[F\033[K\033[F\033[K\033[F\033[K')
+print('Process finished: 100%')
+print(str(compareCounter) + ' times of operations has been taken in total.')
 print('Final Score: ' + str(bestScore))
-print(result)
