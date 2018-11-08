@@ -81,7 +81,7 @@ def getNeighborFieldRandom(listOfCities):
   return semiResult
 
 compareCounter = 0
-temperature = 1800
+temperature = 1850
 
 def saClimb(listOfCities):
   '''
@@ -150,7 +150,7 @@ def saClimb(listOfCities):
   #       listOfCities = semiResult
 
   if temperature > 0:
-    temperature = temperature * 0.999986
+    temperature = temperature * 0.9999849
   return listOfCities, bestScore
 
 
