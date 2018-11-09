@@ -5,6 +5,7 @@ from django.http import (HttpRequest, HttpResponse, HttpResponseForbidden,
 # from django.db import *
 from ..models import *
 from .SimulatedAnnealing import SA_Step
+from .LocalSearch import LS_Step
 # from LocalSearch import *
 
 ''' SA Part'''
@@ -58,4 +59,16 @@ def SA_step(request):
   }
   return JsonResponse({
     'SA': SA
+  })
+
+def LS_step(request):
+  temp = LS_Step()
+  LS = {
+    'title': 'Local Search(Climbing)',
+    'process': temp[1],
+    'coordinate': temp[0],
+    'length': temp[2]
+  }
+  return JsonResponse({
+    'LS': LS
   })

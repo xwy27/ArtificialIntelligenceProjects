@@ -4,8 +4,9 @@ let path = {}; // current city travel path
 // Generate Chart by chartData
 // chartData = {
 //  title: 'xxx',
-//  x: [xxx,xxx,xxx],
-//  y: [xxx,xxx,xxx]
+//  process: 'xxx',
+//  length: 'xxx',
+//  coordinate: [[xxx,xxx],[xxx,xxx]...]
 // }
 function generateChart(chartData, chartId) {
   let myChart = echarts.init(document.getElementById(chartId + '-chart'));
@@ -14,7 +15,8 @@ function generateChart(chartData, chartId) {
     title: {
       text: 'Algorithm: ' + chartData.title + '\n' +
         'Process: ' + chartData.process + '%\n' +
-        'Length: ' + chartData.length.toFixed(2) + 'km'
+        'Length: ' + chartData.length.toFixed(2) + 'km',
+      left: 'center',
     },
     tooltip: {
       formatter: function (params) {
@@ -46,6 +48,7 @@ function generateChart(chartData, chartId) {
   myChart.setOption(option);
 }
 
+// Initial the chart
 $(document).ready(() => {
   $.ajax({
     url: 'api/SA_origin',
@@ -55,43 +58,56 @@ $(document).ready(() => {
     success: (res) => {
       console.log(res['origin']);
       path = res['origin'];
-      generateChart(path, 'part1');
+      generateChart(path, 'LS');
+      generateChart(path, 'SA');
     }
   });
 });
 
-// Show chart when tab changes
-function refresh(tabPath) {
+// Refresh LS chart
+function refreshLS(chartId) {
   return function () {
     $.ajax({
-      url: 'api/SA_step',
+      url: 'api/LS_step',
       data: '',
       type: 'GET',
-      async: false,
       success: (res) => {
-        // console.log(res);
-        generateChart(res.SA, tabPath);
-        if (res.SA.process < 100) {
-          setTimeout(refresh(tabPath), 1000);
+        generateChart(res.LS, chartId);
+        if (res.LS.process < 100) {
+          setTimeout(refreshLS(chartId), 1000);
         }
       }
     });
   };
 };
 
-$('.tabular.menu .item').tab({
-  onVisible: (tabPath) => {
-    echarts.dispose(document.getElementById(tabPath + '-chart'));
-    // TODO: get Data if generate is true
-    if (generate) {
-      refresh(tabPath)();
-    } else {
-      generateChart(path, tabPath);
-    }
-  }
-});
+// Refresh SA chart
+function refreshSA(chartId) {
+  return function () {
+    $.ajax({
+      url: 'api/SA_step',
+      data: '',
+      type: 'GET',
+      success: (res) => {
+        generateChart(res.SA, chartId);
+        if (res.SA.process < 100) {
+          setTimeout(refreshSA(chartId), 1000);
+        }
+      }
+    });
+  };
+};
 
 // Generate chart button
 $('#generate').on('click', () => {
   generate = true;
+  echarts.dispose(document.getElementById('LS-chart'));
+  echarts.dispose(document.getElementById('SA-chart'));
+  if (generate) {
+    refreshLS('LS')();
+    refreshSA('SA')();
+  } else {
+    generateChart(path, 'LS');
+    generateChart(path, 'SA');
+  }
 });

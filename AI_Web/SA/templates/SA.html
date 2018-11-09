@@ -8,7 +8,7 @@
 
   <title>Simulated Annealing</title>
   <link rel="shortcut icon" href="/static/img/ai.jpg">
-  
+
   <!-- Source Library -->
   <!-- jQuery -->
   <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
@@ -30,43 +30,13 @@
       </h1>
       <div id="generate" class="ui huge primary button">Generate Chart</div>
     </div>
-
-    <div class="ui container">
-      <div class="ui four item inverted pointing tabular menu">
-        <a class="active item" data-tab="part1">part1</a>
-        <a class="item" data-tab="part2">part2</a>
-        <a class="item" data-tab="part3">part3</a>
-        <a class="item" data-tab="part4">part4</a>
-      </div>
-    </div>
   </div>
 
-  <!-- part1 Chart -->
-  <div class="chart ui bottom attached tab segment active" data-tab="part1">
-    <div class="row">
-      <div class="column active" id="part1-chart"></div>
-    </div>
-  </div>
-
-  <!-- part2 Chart -->
-  <div class="chart ui bottom attached tab segment" data-tab="part2">
-    <div class="row">
-      <div class="column" id="part2-chart" data-tab="part2"></div>
-    </div>
-  </div>
-  
-  <!-- part3 Chart -->
-  <div class="chart ui bottom attached tab segment" data-tab="part3">
-    <div class="row">
-      <div class="column" id="part3-chart" data-tab="part3"></div>
-    </div>
-  </div>
-  
-  <!-- part4 Chart -->
-  <div class="chart ui bottom attached tab segment" data-tab="part4">
-    <div class="row">
-      <div class="column" id="part4-chart" data-tab="part4"></div>
-    </div>
+  <div class="chart ui bottom attached grid">
+    <!-- LS Chart -->
+    <div class="eight wide column" id="LS-chart"></div>
+    <!-- SA Chart -->
+    <div class="eight wide column" id="SA-chart"></div>
   </div>
 </body>
 

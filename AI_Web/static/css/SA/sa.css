@@ -4,7 +4,8 @@
 }
 
 /* Content */
-.chart>.row>.column {
+.chart>.column {
   /* background-color: darkkhaki; */
   height: 550px;
+  margin-top: 10px;
 }

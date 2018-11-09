@@ -29,4 +29,5 @@ urlpatterns = [
     # api
     url(r'api/SA_origin$', sa.SA_origin),
     url(r'api/SA_step$', sa.SA_step),
+    url(r'api/LS_step$', sa.LS_step),
 ]
