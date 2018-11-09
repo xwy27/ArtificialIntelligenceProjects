@@ -204,6 +204,8 @@ def SA_Step():
   global points
   global result
 
+  counter = 0
+
   try:
     tableItem = SAState.objects.get(id=0)
     if tableItem.counter < 100:
