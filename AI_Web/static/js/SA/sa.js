@@ -1,5 +1,6 @@
 let generate = false; // whether generate algorithm
 let path = {}; // current city travel path
+let SA_refresh, LS_refresh;
 
 // Generate Chart by chartData
 // chartData = {
@@ -74,7 +75,7 @@ function refreshLS(chartId) {
       success: (res) => {
         generateChart(res.LS, chartId);
         if (res.LS.process < 100) {
-          setTimeout(refreshLS(chartId), 1000);
+          LS = setTimeout(refreshLS(chartId), 1000);
         }
       }
     });
@@ -91,7 +92,7 @@ function refreshSA(chartId) {
       success: (res) => {
         generateChart(res.SA, chartId);
         if (res.SA.process < 100) {
-          setTimeout(refreshSA(chartId), 1000);
+          SA = setTimeout(refreshSA(chartId), 1000);
         }
       }
     });
@@ -104,10 +105,38 @@ $('#generate').on('click', () => {
   echarts.dispose(document.getElementById('LS-chart'));
   echarts.dispose(document.getElementById('SA-chart'));
   if (generate) {
-    refreshLS('LS')();
-    refreshSA('SA')();
+    LS = refreshLS('LS')();
+    SA = refreshSA('SA')();
   } else {
     generateChart(path, 'LS');
     generateChart(path, 'SA');
   }
+});
+
+// Generate chart button
+$('#clear').on('click', () => {
+  generate = false;
+  clearTimeout(LS)
+  clearTimeout(SA)
+  echarts.dispose(document.getElementById('LS-chart'));
+  echarts.dispose(document.getElementById('SA-chart'));
+  generateChart(path, 'LS');
+  generateChart(path, 'SA');
+
+  $.ajax({
+    url: 'api/LS_clear',
+    data: '',
+    type: 'GET',
+    success: (res) => {
+      console.log(res['success']);
+    }
+  });
+  $.ajax({
+    url: 'api/SA_clear',
+    data: '',
+    type: 'GET',
+    success: (res) => {
+      console.log(res['success']);
+    }
+  })
 });

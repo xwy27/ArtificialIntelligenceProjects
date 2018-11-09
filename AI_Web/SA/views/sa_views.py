@@ -4,9 +4,8 @@ from django.http import (HttpRequest, HttpResponse, HttpResponseForbidden,
                          HttpResponseNotFound, JsonResponse, QueryDict)
 # from django.db import *
 from ..models import *
-from .SimulatedAnnealing import SA_Step
-from .LocalSearch import LS_Step
-# from LocalSearch import *
+from .SimulatedAnnealing import (SA_Step, SA_Clear_Data)
+from .LocalSearch import (LS_Step, LS_Clear_Data)
 
 ''' SA Part'''
 
@@ -61,6 +60,13 @@ def SA_step(request):
     'SA': SA
   })
 
+def SA_Clear(request):
+  SA_Clear_Data()
+  return JsonResponse({
+    'success':  'Clear Successfully.'
+  })
+  
+
 def LS_step(request):
   temp = LS_Step()
   LS = {
@@ -71,4 +77,10 @@ def LS_step(request):
   }
   return JsonResponse({
     'LS': LS
+  })
+
+def LS_Clear(request):
+  LS_Clear_Data()
+  return JsonResponse({
+    'success':  'Clear Successfully.'
   })
