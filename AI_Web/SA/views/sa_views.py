@@ -49,7 +49,13 @@ def SA_origin(request):
     })
 
 def SA_step(request):
-  SA = SA_Step()
+  temp = SA_Step()
+  SA = {
+    'title': 'Simulated Annealing',
+    'process': temp[1],
+    'coordinate': temp[0],
+    'length': temp[2]
+  }
   return JsonResponse({
     'SA': SA
   })

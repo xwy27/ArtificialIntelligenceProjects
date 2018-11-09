@@ -12,14 +12,14 @@ function generateChart(chartData, chartId) {
 
   let option = {
     title: {
-      text: 'Title: ' + chartData.title + '\n' +
-        'Process: ' + chartData.process + '\n' +
-        'Length: ' + chartData.length
+      text: 'Algorithm: ' + chartData.title + '\n' +
+        'Process: ' + chartData.process + '%\n' +
+        'Length: ' + chartData.length.toFixed(2) + 'km'
     },
     tooltip: {
       formatter: function (params) {
-          var data = params.data || [0, 0];
-          return 'City: ' + data[0] + ', ' + data[1];
+        var data = params.data || [0, 0];
+        return 'City: ' + data[0] + ', ' + data[1];
       }
     },
     xAxis: {
@@ -58,23 +58,40 @@ $(document).ready(() => {
       generateChart(path, 'part1');
     }
   });
-})
+});
 
 // Show chart when tab changes
+function refresh(tabPath) {
+  return function () {
+    $.ajax({
+      url: 'api/SA_step',
+      data: '',
+      type: 'GET',
+      async: false,
+      success: (res) => {
+        // console.log(res);
+        generateChart(res.SA, tabPath);
+        if (res.SA.process < 100) {
+          setTimeout(refresh(tabPath), 1000);
+        }
+      }
+    });
+  };
+};
+
 $('.tabular.menu .item').tab({
   onVisible: (tabPath) => {
     echarts.dispose(document.getElementById(tabPath + '-chart'));
     // TODO: get Data if generate is true
-    $.ajax({
-        url : 'api/SA_step',
-        data: '',
-        type: 'GET',
-        async: false,
-        success: (res) => {
-          console.log(res);
-        }
-    });
-    let data = generate ? data[tabPath] : path;
-    generateChart(data, tabPath);
+    if (generate) {
+      refresh(tabPath)();
+    } else {
+      generateChart(path, tabPath);
+    }
   }
+});
+
+// Generate chart button
+$('#generate').on('click', () => {
+  generate = true;
 });

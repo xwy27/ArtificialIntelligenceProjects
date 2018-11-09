@@ -208,23 +208,22 @@ def SA_Step():
 
   try:
     tableItem = SAState.objects.get(id=0)
-    if tableItem.counter < 100:
+    if tableItem.Process < 100:
       counter = tableItem.Process
       temperature = tableItem.Temperature
       result = json.loads(tableItem.Path)
   except SAState.DoesNotExist:
     # Save data here
     tableItem = SAState(0, 0, temperature, json.dumps(result))
-    tableItem.save()
  
-  for _ in range(0, 1600):
+  for _ in range(0, 4000):
     result, bestScore = saClimb(result)
   counter = counter + 1
   
   tableItem.Process = counter
   tableItem.Temperature = temperature
   tableItem.Path = json.dumps(result)
-  tableItem.update()
+  tableItem.save()
   
   toReturn = []
   for city in result:
