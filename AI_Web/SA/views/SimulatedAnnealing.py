@@ -204,15 +204,16 @@ def SA_Step():
   global points
   global result
 
-  tableItem = SAState.objects.get(id=0)
-  if tableItem == None:
+  try:
+    tableItem = SAState.objects.get(id=0)
+    if tableItem.counter < 100:
+      counter = tableItem.Process
+      temperature = tableItem.Temperature
+      result = json.loads(tableItem.Path)
+  except SAState.DoesNotExist:
     # Save data here
     tableItem = SAState(0, temperature, json.dumps(result))
     tableItem.save()
-  elif tableItem.counter < 100:
-    counter = tableItem.Process
-    temperature = tableItem.Temperature
-    result = json.loads(tableItem.Path)
   
   for _ in range(0, 1600):
     result, bestScore = saClimb(result)
