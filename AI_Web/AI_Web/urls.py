@@ -27,5 +27,6 @@ urlpatterns = [
     path('Astar/', astar.Astar),
 
     # api
-    url(r'api/SA_origin$', sa.SA_origin)
+    url(r'api/SA_origin$', sa.SA_origin),
+    url(r'api/SA_step$', sa.SA_step),
 ]

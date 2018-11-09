@@ -4,9 +4,8 @@ from django.http import (HttpRequest, HttpResponse, HttpResponseForbidden,
                          HttpResponseNotFound, JsonResponse, QueryDict)
 # from django.db import *
 from ..models import *
-import SimulatedAnnealing
-import LocalSearch
-                        
+from .SimulatedAnnealing import SA_Step
+# from LocalSearch import *
 
 ''' SA Part'''
 
@@ -24,6 +23,8 @@ def SA_origin(request):
   {
     origin: {
       title: xxx,
+      process: xxx,
+      length: xxx,
       coordinate: [[xxx,xxx],[xxx,xxx],[xxx,xxx]]
     }
   }
@@ -39,8 +40,16 @@ def SA_origin(request):
 
     cities = {
       'title': 'Origin',
+      'process': 0,
+      'length': 0,
       'coordinate': coordinate
     }
     return JsonResponse({
       'origin': cities
     })
+
+def SA_step(request):
+  SA = SA_Step()
+  return JsonResponse({
+    'SA': SA
+  })
