@@ -1,13 +1,13 @@
 import math, copy, random, sys, time
 from datetime import datetime
-# from ..models import *
+from ..models import *
 
 # Get data from database
-# points = City.objects.all()
+points = [[x.id, x.X, x.Y] for x in City.objects.all()]
 
 # Get data from file
-f = open('./Data/Cities/kroA150Pro.tsp', 'r')
-points = [(int(lines.split()[0]), int(lines.split()[1]), int(lines.split()[2])) for lines in f.readlines()]
+# f = open('./Data/Cities/kroA150Pro.tsp', 'r')
+# points = [(int(lines.split()[0]), int(lines.split()[1]), int(lines.split()[2])) for lines in f.readlines()]
 distance = []
 
 def evaluate(listOfCities):
@@ -140,27 +140,74 @@ for pointX in points:
       distance[-1].append(distance[pointY[0] - 1][pointX[0] - 1])
 
 # Initial result: [1, 2, ..., n, 1]
-result = [x for x in range(1, len(points) + 1)]
-result.append(1)
 
-print('Initial score: ' + str(evaluate(result)) + '\n')
-for x in range(0, 3):
+def LS_Cli():
+  result = [x for x in range(1, len(points) + 1)]
+  result.append(1)
+
+  print('Initial score: ' + str(evaluate(result)) + '\n')
+  for x in range(0, 3):
+    sys.stdout.write('\033[F\033[K')
+    print(str(3 - x) + ' seconds to start local search...')
+    time.sleep(1)
+    
   sys.stdout.write('\033[F\033[K')
-  print(str(3 - x) + ' seconds to start local search...')
-  time.sleep(1)
-  
-sys.stdout.write('\033[F\033[K')
-print('-------Start local search-------\n\n\n')
+  print('-------Start local search-------\n\n\n')
 
 
-for counter in range(1, 400):
-  result, bestScore = climb(result)
+  for counter in range(1, 400):
+    result, bestScore = climb(result)
+    sys.stdout.write('\033[F\033[K\033[F\033[K\033[F\033[K')
+    print('Processing: ' + str(counter/4) + '%')
+    print(str(compareCounter) + ' times of operations has been taken.')
+    print('Current score: ' + str(bestScore))
+
   sys.stdout.write('\033[F\033[K\033[F\033[K\033[F\033[K')
-  print('Processing: ' + str(counter/4) + '%')
-  print(str(compareCounter) + ' times of operations has been taken.')
-  print('Current score: ' + str(bestScore))
+  print('Process finished: 100%')
+  print(str(compareCounter) + ' times of operations has been taken in total.')
+  print('Final Score: ' + str(bestScore))
 
-sys.stdout.write('\033[F\033[K\033[F\033[K\033[F\033[K')
-print('Process finished: 100%')
-print(str(compareCounter) + ' times of operations has been taken in total.')
-print('Final Score: ' + str(bestScore))
+def LS_Clear_Data():
+  global points
+
+  result = [x for x in range(1, len(points) + 1)]
+  result.append(1)
+
+  try:
+    tableItem = LSState.objects.get(id=0)
+    tableItem.Process = 0
+    tableItem.Path = json.dumps(result)
+  except LSState.DoesNotExist:
+    # Save data here
+    tableItem = LSState(0, 0, json.dumps(result))
+  tableItem.save()
+
+def LS_Step():
+  global points
+
+  result = [x for x in range(1, len(points) + 1)]
+  result.append(1)
+  counter = 0
+
+  try:
+    tableItem = LSState.objects.get(id=0)
+    if tableItem.Process < 100:
+      counter = tableItem.Process
+      result = json.loads(tableItem.Path)
+  except LSState.DoesNotExist:
+    # Save data here
+    tableItem = LSState(0, 0, json.dumps(result))
+
+  for _ in range(0, 4):
+    result, bestScore = climb(result)
+  counter = counter + 1
+
+  tableItem.Process = counter
+  tableItem.Path = json.dumps(result)
+  tableItem.save()
+
+  toReturn = []
+  for city in result:
+    toReturn.append([points[city - 1][1], points[city - 1][2]])
+  
+  return toReturn, counter, bestScore

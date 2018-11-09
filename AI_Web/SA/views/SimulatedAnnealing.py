@@ -165,17 +165,18 @@ for pointX in points:
     else:
       distance[-1].append(distance[pointY[0] - 1][pointX[0] - 1])
 
-# Initial result: [1, 2, ..., n, 1]
-result = [x for x in range(1, len(points) + 1)]
-result.append(1)
+
 
 def SA_Cli():
   '''
   Cli version of SA_Cli
   '''
   global compareCounter
-  global result
   global temperature
+
+  result = [x for x in range(1, len(points) + 1)]
+  result.append(1)
+
   print('Initial score: ' + str(evaluate(result)) + '\n')
   for x in range(0, 3):
     sys.stdout.write('\033[F\033[K')
@@ -202,8 +203,10 @@ def SA_Cli():
 def SA_Step():
   global temperature
   global points
-  global result
 
+  temperature = 1850
+  result = [x for x in range(1, len(points) + 1)]
+  result.append(1)
   counter = 0
 
   try:
@@ -230,3 +233,19 @@ def SA_Step():
     toReturn.append([points[city - 1][1], points[city - 1][2]])
   
   return toReturn, counter, bestScore
+
+def SA_Clear_Data():
+  global points
+
+  result = [x for x in range(1, len(points) + 1)]
+  result.append(1)
+
+  try:
+    tableItem = SAState.objects.get(id=0)
+    tableItem.Process = 0
+    tableItem.Temperature = 1850
+    tableItem.Path = json.dumps(result)
+  except SAState.DoesNotExist:
+    # Save data here
+    tableItem = SAState(0, 0, 1850, json.dumps(result))
+  tableItem.save()
