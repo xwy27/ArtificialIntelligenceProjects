@@ -2,12 +2,9 @@
 from django.shortcuts import render
 from django.http import (HttpRequest, HttpResponse, HttpResponseForbidden,
                          HttpResponseNotFound, JsonResponse, QueryDict)
-# from django.db import *
 from ..models import *
 from .SimulatedAnnealing import (SA_Step, SA_Clear_Data)
 from .LocalSearch import (LS_Step, LS_Clear_Data)
-
-''' SA Part'''
 
 def SA(request):
   '''
@@ -17,6 +14,8 @@ def SA(request):
 
 def SA_origin(request):
   '''
+  Get the origin data
+
   GET Method with no param
   
   Return json:
@@ -49,6 +48,21 @@ def SA_origin(request):
     })
 
 def SA_step(request):
+  '''
+  Get data of every one percentage for the SA algorithm
+
+  GET Method with no param
+  
+  Return json:
+  {
+    SA: {
+      title: xxx,
+      process: xxx,
+      length: xxx,
+      coordinate: [[xxx,xxx],[xxx,xxx],[xxx,xxx]]
+    }
+  }
+  '''
   temp = SA_Step()
   SA = {
     'title': 'Simulated Annealing',
@@ -61,16 +75,34 @@ def SA_step(request):
   })
 
 def SA_Clear(request):
+  '''
+  Clear data computed by previous SA steps
+  '''
   SA_Clear_Data()
   return JsonResponse({
-    'success':  'Clear Successfully.'
+    'success':  'SA data clear Successfully.'
   })
   
 
 def LS_step(request):
+  '''
+  Get data of every one percentage for the LS algorithm
+   
+  GET Method with no param
+  
+  Return json:
+  {
+    LS: {
+      title: xxx,
+      process: xxx,
+      length: xxx,
+      coordinate: [[xxx,xxx],[xxx,xxx],[xxx,xxx]]
+    }
+  }
+  '''
   temp = LS_Step()
   LS = {
-    'title': 'Local Search(Climbing)',
+    'title': 'Local Search(Hill-Climbing)',
     'process': temp[1],
     'coordinate': temp[0],
     'length': temp[2]
@@ -80,7 +112,10 @@ def LS_step(request):
   })
 
 def LS_Clear(request):
+  '''
+  Clear data computed by previous SA steps
+  '''
   LS_Clear_Data()
   return JsonResponse({
-    'success':  'Clear Successfully.'
+    'success':  'LS data clear Successfully.'
   })

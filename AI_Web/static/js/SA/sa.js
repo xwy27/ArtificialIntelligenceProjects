@@ -2,6 +2,25 @@ let generate = false; // whether generate algorithm
 let path = {}; // current city travel path
 let SA_refresh, LS_refresh;
 
+// Abort all ajaxs:
+// Construct an arry to store all ajaxs
+// When needed, abort all ajaxs in the array.
+let ajaxs = [];
+let oldAjax = $.ajax;
+$.ajax = function() {
+  let args = Array.prototype.slice.call(arguments);
+  let ajax = oldAjax.apply(this, args);
+  ajaxs.push(ajax);
+  return ajax;
+}
+// Abort ajaxs and clear array
+function abortAll() {
+  $.each(ajaxs, function(i, ajax) {
+      ajax.abort();
+  });
+  ajaxs = [];
+}
+
 // Generate Chart by chartData
 // chartData = {
 //  title: 'xxx',
@@ -116,8 +135,9 @@ $('#generate').on('click', () => {
 // Generate chart button
 $('#clear').on('click', () => {
   generate = false;
-  clearTimeout(LS)
-  clearTimeout(SA)
+  abortAll();
+  clearTimeout(LS);
+  clearTimeout(SA);
   echarts.dispose(document.getElementById('LS-chart'));
   echarts.dispose(document.getElementById('SA-chart'));
   generateChart(path, 'LS');

@@ -6,7 +6,6 @@
 /* Content */
 .chart,
 .chart>.column {
-  /* background-color: darkkhaki; */
   height: 550px !important;
   margin-top: 10px;
 }
