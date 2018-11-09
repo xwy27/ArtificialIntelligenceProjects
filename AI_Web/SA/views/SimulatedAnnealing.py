@@ -212,7 +212,7 @@ def SA_Step():
       result = json.loads(tableItem.Path)
   except SAState.DoesNotExist:
     # Save data here
-    tableItem = SAState(0, temperature, json.dumps(result))
+    tableItem = SAState(0, 0, temperature, json.dumps(result))
     tableItem.save()
   
   for _ in range(0, 1600):
