@@ -214,7 +214,7 @@ def SA_Step():
     # Save data here
     tableItem = SAState(0, temperature, json.dumps(result))
     tableItem.save()
-  
+ 
   for _ in range(0, 1600):
     result, bestScore = saClimb(result)
   counter = counter + 1

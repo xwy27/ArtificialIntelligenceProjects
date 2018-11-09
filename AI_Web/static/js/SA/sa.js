@@ -1,25 +1,5 @@
-let data = {
-  part1: {
-    title: 'part1',
-    x: [111,145,345],
-    y: [222,346,777]
-  },
-  part2: {
-    title: 'part2',
-    x: [676,345,349,239],
-    y: [123,658,888,343]
-  },
-  part3: {
-    title: 'part3',
-    x: [345,145,999,585],
-    y: [346,235,777,901]
-  },
-  part4: {
-    title: 'part4',
-    x: [999,585,345,145],
-    y: [346,901,235,777]
-  }
-};
+let generate = false; // whether generate algorithm
+let path = {}; // current city travel path
 
 // Generate Chart by chartData
 // chartData = {
@@ -28,37 +8,44 @@ let data = {
 //  y: [xxx,xxx,xxx]
 // }
 function generateChart(chartData, chartId) {
-  let myChart = echarts.init(document.getElementById(chartId+'-chart'));
+  let myChart = echarts.init(document.getElementById(chartId + '-chart'));
 
   let option = {
     title: {
-        text: chartData.title
+      text: 'Title: ' + chartData.title + '\n' +
+        'Process: ' + chartData.process + '\n' +
+        'Length: ' + chartData.length
     },
-    tooltip: {},
+    tooltip: {
+      formatter: function (params) {
+          var data = params.data || [0, 0];
+          return 'City: ' + data[0] + ', ' + data[1];
+      }
+    },
     xAxis: {
-        type: 'value',
-        splitLine: false,
-        show: false
-      },
-      yAxis: {
-        type: 'value',
-        splitLine: false,
-        show: false
+      splitLine: false,
+      show: false
     },
-    series: [{
-        data: chartData.coordinate,
-        type: 'line'
+    yAxis: {
+      splitLine: false,
+      show: false
+    },
+    series: generate ? [{
+      data: chartData.coordinate,
+      type: 'line'
+    }] : [{
+      symbolSize: 5,
+      data: chartData.coordinate,
+      type: 'scatter'
     }],
-    animationDelay: function(idx) {
-      return idx * 10000;
+    animationDelay: function (idx) {
+      return idx * 10;
     }
   };
 
   myChart.setOption(option);
 }
 
-let generate = false;
-let origin = {};
 $(document).ready(() => {
   $.ajax({
     url: 'api/SA_origin',
@@ -67,8 +54,8 @@ $(document).ready(() => {
     async: false,
     success: (res) => {
       console.log(res['origin']);
-      origin = res['origin'];
-      generateChart(origin, 'part1');
+      path = res['origin'];
+      generateChart(path, 'part1');
     }
   });
 })
@@ -78,7 +65,16 @@ $('.tabular.menu .item').tab({
   onVisible: (tabPath) => {
     echarts.dispose(document.getElementById(tabPath + '-chart'));
     // TODO: get Data if generate is true
-    let data = generate ? data[tabPath] : origin;
+    $.ajax({
+        url : 'api/SA_step',
+        data: '',
+        type: 'GET',
+        async: false,
+        success: (res) => {
+          console.log(res);
+        }
+    });
+    let data = generate ? data[tabPath] : path;
     generateChart(data, tabPath);
   }
 });
