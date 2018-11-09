@@ -143,20 +143,22 @@ $('#clear').on('click', () => {
   generateChart(path, 'LS');
   generateChart(path, 'SA');
 
-  $.ajax({
-    url: 'api/LS_clear',
-    data: '',
-    type: 'GET',
-    success: (res) => {
-      console.log(res['success']);
-    }
-  });
-  $.ajax({
-    url: 'api/SA_clear',
-    data: '',
-    type: 'GET',
-    success: (res) => {
-      console.log(res['success']);
-    }
-  })
+  setTimeout(() => {
+    $.ajax({
+      url: 'api/LS_clear',
+      data: '',
+      type: 'GET',
+      success: (res) => {
+        console.log(res['success']);
+      }
+    });
+    $.ajax({
+      url: 'api/SA_clear',
+      data: '',
+      type: 'GET',
+      success: (res) => {
+        console.log(res['success']);
+      }
+    });
+  }, 1000);
 });
