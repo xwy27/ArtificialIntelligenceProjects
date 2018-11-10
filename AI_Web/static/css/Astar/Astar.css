@@ -31,10 +31,12 @@
 .part {
   width: 100px;
   height: 100px;
+  margin: 2px;
 
   background-color: aqua;
-  text-align: center;
-  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .part:hover {
