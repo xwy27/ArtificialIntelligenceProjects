@@ -31,8 +31,10 @@
 .part {
   width: 100px;
   height: 100px;
-  margin: 5px;
+
   background-color: aqua;
+  text-align: center;
+  margin: 0 auto;
 }
 
 .part:hover {
