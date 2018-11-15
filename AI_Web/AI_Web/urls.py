@@ -19,12 +19,14 @@ from django.conf.urls import url
 
 from SA.views import sa_views as sa
 from Astar.views import Astar_views as astar
+from ChineseChess.views import chess_views as chess
 
 urlpatterns = [
     # url
     path('admin/', admin.site.urls),
     path('SA/', sa.SA),
     path('Astar/', astar.Astar),
+    path('Chess/', chess.chess),
 
     # api
     url(r'api/SA_origin$', sa.SA_origin),

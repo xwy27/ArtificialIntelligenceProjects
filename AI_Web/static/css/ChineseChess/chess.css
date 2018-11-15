@@ -1,0 +1,36 @@
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.board {
+  width: 720px;
+  height: 800px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: url(/static/img/ChineseChess/chess_board.jpg);
+  background-size: cover;
+  background-position: center;
+}
+.row {
+  height: 10%;
+  width: 100%;
+}
+
+.row>img {
+  height: 100%;
+  width: 10.515%;
+}
+
+.select {
+  background: url(/static/img/ChineseChess/OOS.GIF);
+  background-size: cover;
+}
+
+.not-select {
+  
+}

@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'SA',
     'Astar',
+    'ChineseChess',
 ]
 
 MIDDLEWARE = [
