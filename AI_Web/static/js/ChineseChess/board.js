@@ -1,6 +1,6 @@
 class Board {
   /**
-   * Control the chess borad
+   * Control the chess board
    * 
    * Member var:
    * string board: the chess board string
@@ -13,7 +13,11 @@ class Board {
    */
   constructor(chess) {
     this.chess = chess;
-    this.board = this.getInitialBoard();
+    this.board = [];
+    let temp = this.getInitialBoard();
+    for (let i = 0; i < temp.length; ++i) {
+      this.board.push(temp[i]);
+    }
   }
 
   /**
@@ -36,7 +40,11 @@ class Board {
    * return the current board
    */
   getBoard() {
-    return this.board;
+    let temp = '';
+    $.each(this.board, (index, value) => {
+      temp += value;
+    })
+    return temp;
   }
   
   /**
@@ -74,7 +82,13 @@ class Board {
    * @param {int} nextX next chess x coordinate
    * @param {int} nextY next chess y coordinate
    */
-  isChessMoveValid(curX, curY, nextX, nextY) {
+  isChessMoveValid(cur, next) {
+    let temp = oneToTwo(cur);
+    let curX = temp.x;
+    let curY = temp.y;
+    temp = oneToTwo(next);
+    let nextX = temp.x;
+    let nextY = temp.y;
     if (nextX < MIN_ROW || nextX > MAX_ROW ||
       nextY < MIN_COL || nextY > MAX_COL){
       return false;
@@ -105,16 +119,11 @@ class Board {
    * @param {int} next next chess pos
    */
   moveChess(cur, next) {
-    let temp = oneToTwo(cur);
-    let curX = temp.x;
-    let curY = temp.y;
-    temp = oneToTwo(next);
-    let nextX = temp.x;
-    let nextY = temp.y;
-    if (this.isChessMoveValid(curX, curY, nextX, nextY)) {
-      board[next] = board[cur];
-      board[cur] = '0';
-      swap(this.chess[cur].src, this.chess[next].src);
+    if (this.isChessMoveValid(cur, next)) {
+      this.board[next] = this.board[cur];
+      this.board[cur] = '0';
+      this.chess[next].src = this.chess[cur].src;
+      this.chess[cur].src = CHESS_IMG_PATH[this.board[cur]];
     }
   }
 }

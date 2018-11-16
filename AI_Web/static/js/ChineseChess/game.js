@@ -32,7 +32,10 @@ chessDom.on('click', function () {
         next = -1;
       }
     } else { // move chess
+      chessDom[cur].classList.remove('select');
+      chessDom[cur].classList.add('not-select');
       board.moveChess(cur, next);
+      // TODO:Change turn
     }
   }
 });
