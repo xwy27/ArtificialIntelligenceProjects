@@ -1,8 +1,22 @@
 body {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  justify-content: center;
+  justify-content: space-around;
+}
+
+.info {
+  margin-top: 20px;
+  font-size: 15px;
+  font-weight: bold;
+}
+
+.red {
+  color: #FF0000;
+}
+
+.black {
+  color: #000000;
 }
 
 .board {

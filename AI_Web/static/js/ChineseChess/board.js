@@ -49,6 +49,14 @@ class Board {
   }
 
   /**
+   * Return which side the chess is
+   * @param {int} pos the position of the chess
+   */
+  getSide(pos) {
+    return this.chessHelper.getSide(this.board[pos]);
+  }
+
+  /**
    * return the game state
    */
   getGameState() {
@@ -135,8 +143,27 @@ class Board {
       this.board[cur] = '0';
       this.chess[next].src = this.chess[cur].src;
       this.chess[cur].src = CHESS_IMG_PATH[this.board[cur]];
+      return {
+        'move': true,
+        'game': this.getGameState()
+      }
     } else {
       console.log("Invalid!");
+    }
+    return {
+      'move': false,
+      'game': this.getGameState()
+    };
+  }
+
+  /**
+   * Reset the board
+   */
+  resetBoard() {
+    this.board = [];
+    let temp = this.getInitialBoard();
+    for (let i = 0; i < temp.length; ++i) {
+      this.board.push(temp[i]);
     }
   }
 }

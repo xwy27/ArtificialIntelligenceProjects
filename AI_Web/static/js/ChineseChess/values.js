@@ -37,5 +37,9 @@ const MIN_COL = 0;
 const MAX_COL = 8;
 
 // player turn
-const BLACK_TURN = 0;
-const RED_TURN = 1;
+const BLACK_TURN = false;
+const BLACK_CLASS = 'black';
+const BLACK_PLAYING = '黑方';
+const RED_TURN = true;
+const RED_CLASS = 'red';
+const RED_PLAYING = '红方';
