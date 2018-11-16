@@ -67,7 +67,7 @@ chessDom.on('click', function () {
         let temp_store = board.moveChess(cur, next);
         if (temp_store.game == PLAYING && temp_store.move) { // game continue and move successfully, change turn
           turn = !turn;
-        } else {  // game end
+        } else if (temp_store.game != PLAYING) {  // game end
           if (temp_store.game == RED_WIN) {
             alert('RED WIN');
           } else {
@@ -98,6 +98,7 @@ function startGame() {
   board.resetBoard();
   board.initBoard();
   turn = RED_TURN;
+  gameState = PLAYING;
   $('#player').removeClass().addClass(turn ? RED_CLASS : BLACK_CLASS);
   $('#player').html(turn ? RED_PLAYING : BLACK_PLAYING);
 }
