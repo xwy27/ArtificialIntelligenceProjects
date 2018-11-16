@@ -5,9 +5,12 @@ let next = -1; // Next position for chess to move
 let chessDom = $('img');
 let board = new Board(chessDom);
 
+// Set index for node in board
 chessDom.each(function (index, value) {
   $(this).attr('data-index', index);
 });
+
+// Set click event for chess
 chessDom.on('click', function () {
   if (cur == -1) { // select chess
     cur = parseInt($(this).attr('data-index'));

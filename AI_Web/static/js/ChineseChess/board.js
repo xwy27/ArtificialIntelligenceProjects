@@ -74,7 +74,7 @@ class Board {
    * @param {int} pos2 pos for chess 2
    */
   isSameSide(pos1, pos2) {
-    return this.chessHelper.sameSide(this.board[pos1], this.board[pos2]);
+    return this.chessHelper.isSameSide(this.board[pos1], this.board[pos2]);
   }
 
   /**
@@ -126,11 +126,10 @@ class Board {
    */
   moveChess(cur, next) {
     let ans = this.getChessMovePos(cur);
-    console.log(this.board[cur] + ' moves from: (' + oneToTwo(cur).x + ',' + oneToTwo(cur).y + ') to:' +
-      '(' + oneToTwo(next).x + ', ' + oneToTwo(next).y + ')');
-    console.log(typeof(ans), ans);
-    console.log(typeof(next), next);
-    console.log(ans.indexOf(next));
+    // console.log(this.board[cur] + ' moves from: (' + oneToTwo(cur).x + ',' + oneToTwo(cur).y + ') to:' +
+    //   '(' + oneToTwo(next).x + ', ' + oneToTwo(next).y + ')');
+    // console.log(typeof(ans), ans);
+    // console.log(typeof(next), next);
     if (ans.indexOf(next) != -1) {
       this.board[next] = this.board[cur];
       this.board[cur] = '0';

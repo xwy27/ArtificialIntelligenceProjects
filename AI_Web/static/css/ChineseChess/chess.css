@@ -15,7 +15,9 @@ body {
   background: url(/static/img/ChineseChess/chess_board.jpg);
   background-size: cover;
   background-position: center;
+  user-select: none;
 }
+
 .row {
   height: 10%;
   width: 100%;

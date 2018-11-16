@@ -28,6 +28,11 @@ function oneToTwo(pos) {
   }
 }
 
+/**
+ * Return if the (posX, posY) inside the board
+ * @param {int} posX 
+ * @param {int} posY 
+ */
 function inBoard(posX, posY) {
   return posX >= MIN_COL && posX <= MAX_COL &&
     posY >= MIN_ROW && posY <= MAX_ROW;
