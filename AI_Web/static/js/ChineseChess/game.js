@@ -10,34 +10,51 @@ chessDom.each(function (index, value) {
 });
 chessDom.on('click', function () {
   if (cur == -1) { // select chess
+    cur = parseInt($(this).attr('data-index'));
     if (board.isChess(cur)) { // is chess
-      cur = $(this).attr('data-index');
       $(this).removeClass('not-select');
       $(this).addClass('select');
     }
   } else { // select destination
-    next = $(this).attr('data-index');
+    next = parseInt($(this).attr('data-index'));
     if (board.isChess(next)) {
       if (next == cur) { // give up selection
         $(this).removeClass('select');
         $(this).addClass('not-select');
         cur = -1;
         next = -1;
-      } else if (board.getChessSide(cur) == board.getChessSide(next)) { // same side, change selection
-        chessDom[cur].classList.remove('select');
-        chessDom[cur].classList.add('not-select');
-        $(this).removeClass('not-select');
-        $(this).addClass('select');
-        cur = next;
-        next = -1;
+      } else {
+        if (board.isSameSide(cur, next)) { // same side, change selection
+          console.log('same');
+          chessDom[cur].classList.remove('select');
+          chessDom[cur].classList.add('not-select');
+          $(this).removeClass('not-select');
+          $(this).addClass('select');
+          cur = next;
+          next = -1;
+        } else {  // other side, kill that chess
+          console.log('diff');
+          chessDom[cur].classList.remove('select');
+          chessDom[cur].classList.add('not-select');
+          board.moveChess(cur, next);
+          cur = -1;
+          next = -1;
+          // TODO:Change turn
+        }
       }
     } else { // move chess
       chessDom[cur].classList.remove('select');
       chessDom[cur].classList.add('not-select');
       board.moveChess(cur, next);
+      cur = -1;
+      next = -1;
       // TODO:Change turn
     }
   }
+});
+chessDom.on('hover', function() {
+  let ans = board.getChessMovePos(parseInt($(this).attr('data-index')));
+  console.log(ans);
 });
 
 board.initBoard();

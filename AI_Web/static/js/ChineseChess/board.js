@@ -13,6 +13,7 @@ class Board {
    */
   constructor(chess) {
     this.chess = chess;
+    this.chessHelper = new Chess('myChess');
     this.board = [];
     let temp = this.getInitialBoard();
     for (let i = 0; i < temp.length; ++i) {
@@ -46,14 +47,6 @@ class Board {
     })
     return temp;
   }
-  
-  /**
-   * Get the chess side: 'red' or 'black'
-   * @param {string} chess the chess to be checked
-   */
-  getChessSide(chess) {
-    return RED.indexOf(chess) == -1 ? 'black' : 'red';
-  }
 
   /**
    * return the game state
@@ -76,11 +69,18 @@ class Board {
   }
 
   /**
+   * Return if two chess are at the same side
+   * @param {int} pos1 pos for chess 1
+   * @param {int} pos2 pos for chess 2
+   */
+  isSameSide(pos1, pos2) {
+    return this.chessHelper.sameSide(this.board[pos1], this.board[pos2]);
+  }
+
+  /**
    * Check if the next move is valid
-   * @param {int} curX current chess x coordinate
-   * @param {int} curY current chess y coordinate
-   * @param {int} nextX next chess x coordinate
-   * @param {int} nextY next chess y coordinate
+   * @param {int} cur current chess coordinate
+   * @param {int} next next chess coordinate
    */
   isChessMoveValid(cur, next) {
     let temp = oneToTwo(cur);
@@ -93,14 +93,20 @@ class Board {
       nextY < MIN_COL || nextY > MAX_COL){
       return false;
     }
-    cur = twoToOne(curX, curY);
-    next = twoToOne(nextX, nextY);
-    if (this.board[next] != '0') {
-      let curSide = this.getChessSide(this.board[cur]);
-      let nextSide = this.getChessSide(this.board[next]);
-      return curSide != nextSide;
+    
+    let ans = this.chessHelper.chessMove(this.board[cur], cur, this.getBoard());
+    if (ans.length == 0) {
+      return false;
     }
     return true;
+  }
+
+  /**
+   * Return the possible positions for chess to move
+   * @param {int} cur current chess position
+   */
+  getChessMovePos(cur) {
+    return this.chessHelper.chessMove(this.board[cur], cur, this.getBoard());
   }
 
   /**
@@ -119,11 +125,19 @@ class Board {
    * @param {int} next next chess pos
    */
   moveChess(cur, next) {
-    if (this.isChessMoveValid(cur, next)) {
+    let ans = this.getChessMovePos(cur);
+    console.log(this.board[cur] + ' moves from: (' + oneToTwo(cur).x + ',' + oneToTwo(cur).y + ') to:' +
+      '(' + oneToTwo(next).x + ', ' + oneToTwo(next).y + ')');
+    console.log(typeof(ans), ans);
+    console.log(typeof(next), next);
+    console.log(ans.indexOf(next));
+    if (ans.indexOf(next) != -1) {
       this.board[next] = this.board[cur];
       this.board[cur] = '0';
       this.chess[next].src = this.chess[cur].src;
       this.chess[cur].src = CHESS_IMG_PATH[this.board[cur]];
+    } else {
+      console.log("Invalid!");
     }
   }
 }

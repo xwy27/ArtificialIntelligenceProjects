@@ -20,6 +20,10 @@ const CHESS_IMG_PATH = {
 // chess side
 const BLACK = ['R','N','B','A','K','C','P'];
 const RED = ['r','n','b','a','k','c','p'];
+const BLACK_SIDE = 44;
+const RED_SIDE = 45;
+const BLACK_SQUARE = [3, 4, 5, 12, 13, 14, 21, 22, 23];
+const RED_SQUARE = [66, 67, 68, 75, 76, 77, 84, 85, 86];
 
 // game state
 const RED_WIN = 'R';
@@ -28,9 +32,9 @@ const PLAYING = 'P';
 
 // board size limits
 const MIN_ROW = 0;
-const MAX_ROW = 10;
+const MAX_ROW = 9;
 const MIN_COL = 0;
-const MAX_COL = 9;
+const MAX_COL = 8;
 
 // player turn
 const BLACK_TURN = 0;

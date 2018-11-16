@@ -14,7 +14,7 @@ String.prototype.replaceCharAt = function (n, c) {
  * @param {int} y y coordinate
  */
 function twoToOne(x, y) {
-  return x * 9 + y;
+  return y * 9 + x;
 }
 
 /**
@@ -23,7 +23,12 @@ function twoToOne(x, y) {
  */
 function oneToTwo(pos) {
   return {
-    'x': pos / 9,
-    'y': pos % 9
+    'y': Math.floor(pos / 9),
+    'x': pos % 9
   }
+}
+
+function inBoard(posX, posY) {
+  return posX >= MIN_COL && posX <= MAX_COL &&
+    posY >= MIN_ROW && posY <= MAX_ROW;
 }
