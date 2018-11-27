@@ -13,7 +13,7 @@ class Board {
    */
   constructor(chess) {
     this.chess = chess;
-    this.chessHelper = new Chess('myChess');
+    this.chessHelper = new Chess('Board_Chess_Helper');
     this.board = [];
     let temp = this.getInitialBoard();
     for (let i = 0; i < temp.length; ++i) {
@@ -57,15 +57,10 @@ class Board {
   }
 
   /**
-   * return the game state
+   * Return the game state
    */
   getGameState() {
-    if (this.board.indexOf('K') == -1) {
-      return RED_WIN;
-    } else if (this.board.indexOf('k') == -1) {
-      return BLACK_WIN;
-    }
-    return PLAYING;
+    return getBoardState(this.board);
   }
   
   /**

@@ -4,8 +4,8 @@
  * @param {int} pos target position
  * @param {string} c target character
  */
-String.prototype.replaceCharAt = function (n, c) {
-  return this.substr(0, n) + c + this.substr(n + 1, this.length - 1 - n);
+function replaceCharAt(str, pos, c) {
+  return str.substr(0, pos) + c + str.substr(pos + 1);
 }
 
 /**
@@ -36,4 +36,17 @@ function oneToTwo(pos) {
 function inBoard(posX, posY) {
   return posX >= MIN_COL && posX <= MAX_COL &&
     posY >= MIN_ROW && posY <= MAX_ROW;
+}
+
+/**
+ * Return the game state of the current board
+ * @param {string} board current board
+ */
+function getBoardState(board) {
+  if (board.indexOf('K') == -1) {
+    return RED_WIN;
+  } else if (board.indexOf('k') == -1) {
+    return BLACK_WIN;
+  }
+  return PLAYING;
 }
