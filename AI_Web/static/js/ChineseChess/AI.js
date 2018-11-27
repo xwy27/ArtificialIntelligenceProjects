@@ -10,8 +10,8 @@ class AI {
    */
   calcBoardValue(board) {
     let MAXScore = 0, MINScore = 0;
-    $.each(board, (index, value) => {
-      switch (value) {
+    for (let index = 0; index < board.length; ++index) {
+      switch (board[index]) {
         case 'r': // MIN rook
           MINScore += ROOK_VALUE[index];
           break;
@@ -55,7 +55,7 @@ class AI {
           MAXScore += KING_PAWN_VALUE[index];
           break;
       }
-    });
+    }
     return MAXScore - MINScore;
   }
 
@@ -64,11 +64,11 @@ class AI {
    * @param {Node} parent Parent node
    */
   createChildren(parent) {
-    let child = [];
+    var child = [];
     let board = parent.getBoard();
     if (parent.getDepth() % 2) {  // MIN Turn
       for (let index = 0; index < board.length; ++index) {
-        if (board[index] in RED) {
+        if (RED.indexOf(board[index]) != -1) {
           let moves = this.chessHelper.chessMove(board[index], index, board);
           $.each(moves, (i, v) => {
             let new_board = replaceCharAt(board, v, board[index]);
@@ -81,7 +81,7 @@ class AI {
       }
     } else {  // MAX Turn
       for (let index = 0; index < board.length; ++index) {
-        if (board[index] in BLACK) {
+        if (BLACK.indexOf(board[index]) != -1) {
           let moves = this.chessHelper.chessMove(board[index], index, board);
           $.each(moves, (i, v) => {
             let new_board = replaceCharAt(board, v, board[index]);
@@ -95,7 +95,7 @@ class AI {
         }
       }
     }
-
+    parent.setChild(child);
     return child;
   }
 
@@ -123,17 +123,17 @@ class AI {
 
       // find child nodes
       let child = this.createChildren(node);
-      console.log(child);
+
+      
+      // if k depth match, break
+      if (child[0].getDepth() > k) {
+        break;
+      }
 
       // add child nodes to tree
       $.each(child, (index, value) => {
         Tree.push(value);
       });
-
-      // if k depth match, break
-      if (child[0].getDepth() >= k) {
-        break;
-      }
 
       // depth not match, evaluate child nodes and
       // add to open to find grandchildren 
@@ -224,11 +224,11 @@ class Node {
   }
 
   /**
-   * Push a node into children
-   * @param {Node} node 
+   * Set children of node
+   * @param {Array[Node]} child 
    */
-  pushChild(node) {
-    this.child.push(node);
+  setChild(child) {
+    this.child = child;
   }
 
   /**
