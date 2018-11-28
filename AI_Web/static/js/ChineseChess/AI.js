@@ -109,6 +109,73 @@ class AI {
   MiniMaxSearch(board, k) {
     var next, origin;
     let StartNode = new Node(board);
+    let Open = [StartNode], Closed = [];
+
+    while (Open.length != 0) {
+      let node = Open.shift();  // Retrieve one node
+      Closed.push(node);  // Search finish
+
+      // if game finish at this node, no need to search
+      if (node.getValue() == Infinity || node.getValue() == -Infinity) {
+        continue;
+      }
+
+      // find child nodes
+      let child = this.createChildren(node);
+
+      // if k depth match, break
+      if (node.getDepth() >= k) {
+        break;
+      }
+
+      // depth not match, evaluate child nodes and
+      // add to open to find grandchildren 
+      $.each(child, (index, value) => {
+        value.setValue(this.calcBoardValue(value.getBoard()));
+        Open.push(value);
+      });
+    }
+
+    // Update node estimation from bottom to top
+    while (Closed.length != 0) {
+      let node = Closed.pop();
+      let children = node.getChild();
+      let max_value = -Infinity;
+      let min_value = Infinity;
+      if (node.getDepth() % 2) {  // MIN Turn
+        $.each(children, (index, value) => {
+          min_value = min_value > value.getValue() ? value.getValue() : min_value;
+        });
+        node.setValue(min_value);
+      } else {  // MAX Turn
+        $.each(children, (index, value) => {
+          if (max_value < value.getValue()) {
+            max_value = value.getValue();
+            if (node.getDepth() == 0) { // get the move
+              next = value.getNext();
+              origin = value.getOrigin();
+            }
+          }
+        });
+        node.setValue(max_value);
+      }
+    }
+
+    return  {
+      'value': StartNode.getValue(),
+      'origin': origin,
+      'next': next
+    }
+  }
+
+  /**
+   * Alpha-Beta Search
+   * @param {string} board current board 
+   * @param {int} k depth
+   */
+  AlphaBetaSearch(board, k) {
+    var next, origin;
+    let StartNode = new Node(board);
     let Tree = [], Open = [StartNode], Closed = [];
 
     while (Open.length != 0) {

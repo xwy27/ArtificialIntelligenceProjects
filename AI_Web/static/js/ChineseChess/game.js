@@ -16,7 +16,7 @@ chessDom.each(function (index, value) {
  * AI moves one step
  */
 function AIMove() {
-  let ai_move = ai.MiniMaxSearch(board.getBoard(), 3);
+  let ai_move = ai.MiniMaxSearch(board.getBoard(), 2);
   let ai_score = board.moveChess(ai_move.origin, ai_move.next);
   if (ai_score.game == PLAYING && ai_score.move) {
     turn = !turn;
