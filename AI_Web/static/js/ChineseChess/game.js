@@ -16,9 +16,12 @@ chessDom.each(function (index, value) {
  * AI moves one step
  */
 function AIMove() {
-  let k = 3;
-  let ai_move = ai.MiniMaxSearch(board.getBoard(), k);
-  console.log("AI" + k);
+  let k = 4;
+  // let ai_move = ai.MiniMaxSearch(board.getBoard(), k);
+  let ai_move = ai.AlphaBetaSearch(board.getBoard(), k, Infinity);
+  ai_move.origin = ai_move.moves[0][0];
+  ai_move.next = ai_move.moves[0][1];
+  console.log(ai_move);
   let ai_score = board.moveChess(ai_move.origin, ai_move.next);
   if (ai_score.game == PLAYING && ai_score.move) {
     turn = !turn;
