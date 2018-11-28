@@ -204,20 +204,6 @@ class AI {
           move = [[child[i].getOrigin(), child[i].getNext()]];
         }
       }
-      // $.each(child, function(index, value) {
-      //   temp = (new AI('temp')).AlphaBetaSearch(value.getBoard(), depth-1, alpha);
-      //   if (temp.value > beta) {  // Bigger than previous min layer beta, no use to search
-      //     return {
-      //       'value': temp.value,
-      //       'moves': [[]]
-      //     }
-      //   }
-      //   if (temp.value > max_value) { // Within beta, find the max_value for node move.
-      //     max_value = temp.value;
-      //     alpha = max_value;
-      //     move = [[value.getOrigin(), value.getNext()]];
-      //   }
-      // });
       return {
         'value' : max_value,
         'moves': move.concat(temp.moves)
@@ -242,20 +228,6 @@ class AI {
           move = [[child[i].getOrigin(), child[i].getNext()]];
         }
       }
-      // $.each(child, function(index, value) {
-      //   temp = (new AI('temp')).AlphaBetaSearch(value.getBoard(), depth-1, beta);
-      //   if (temp.value < alpha) {  // Smaller than previous max layer beta, no use to search
-      //     return {
-      //       'value': temp.value,
-      //       'moves': [[]]
-      //     }
-      //   }
-      //   if (temp.value < min_value) { // Within alpha, find the min_value for node move.
-      //     min_value = temp.value;
-      //     beta = min_value;
-      //     move = [[value.getOrigin(), value.getNext()]];
-      //   }
-      // });
       return {
         'value' : min_value,
         'moves': move.concat(temp.moves)
@@ -263,68 +235,6 @@ class AI {
     }
   }
 }
-
-/**
- * Alpha-Beta Search
- * @param {string} board current board 
- * @param {int} k depth
- */
-// let AIHelper = new AI('helper');
-// function AlphaBetaSearch(board, depth, val) {
-//   if (depth == 0) {
-//     return {
-//       'value' : AIHelper.calcBoardValue(board),
-//       'moves': [[]]
-//     }
-//   }
-
-//   if (depth % 2 == 0) {  // MAX Layer
-//     var alpha = -Infinity, max_value = -Infinity, beta = val;
-//     var move = [[]], temp;
-//     let child = AIHelper.createChildren(new Node(board));
-//     $.each(child, function(index, value) {
-//       temp = AlphaBetaSearch(value.getBoard(), depth-1, alpha);
-//       if (temp.value > beta) {  // Bigger than previous min layer beta, no use to search
-//         return {
-//           'value': temp.value,
-//           'moves': [[]]
-//         }
-//       }
-//       if (temp.value > max_value) { // Within beta, find the max_value for node move.
-//         max_value = temp.value;
-//         alpha = max_value;
-//         move = [[value.getOrigin(), value.getNext()]];
-//       }
-//     });
-//     return {
-//       'value' : max_value,
-//       'moves': move.concat(temp.moves)
-//     }
-//   } else {  // MIN Layer
-//     var alpha = val, min_value = Infinity, beta = Infinity;
-//     var move = [[]];
-//     let child = AIHelper.createChildren(new Node(board));
-//     $.each(child, function(index, value) {
-//       temp = AlphaBetaSearch(value.getBoard(), depth-1, beta);
-//       if (temp.value < alpha) {  // Smaller than previous max layer beta, no use to search
-//         return {
-//           'value': temp.value,
-//           'moves': [[]]
-//         }
-//       }
-//       if (temp.value < min_value) { // Within alpha, find the min_value for node move.
-//         min_value = temp.value;
-//         beta = min_value;
-//         move = [[value.getOrigin(), value.getNext()]];
-//       }
-//     });
-//     return {
-//       'value' : min_value,
-//       'moves': move.concat(temp.moves)
-//     }
-//   }
-// }
-
 
 class Node {
   constructor(board) {
