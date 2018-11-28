@@ -159,8 +159,8 @@ class AI {
           if (max_value < value.getValue()) {
             max_value = value.getValue();
             if (node.getDepth() == 0) { // get the move
-              next = node.getNext();
-              origin = node.getOrigin();
+              next = value.getNext();
+              origin = value.getOrigin();
             }
           }
         });

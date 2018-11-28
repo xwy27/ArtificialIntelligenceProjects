@@ -5,6 +5,7 @@ let gameState = PLAYING;  // Game state
 
 let chessDom = $('img');  // node of board
 let board = new Board(chessDom);  // board
+let ai = new AI("MAX"); // AI
 
 // Set index for node in board
 chessDom.each(function (index, value) {
@@ -17,7 +18,8 @@ chessDom.on('click', function () {
     if (cur == -1) { // select chess
       cur = parseInt($(this).attr('data-index'));
       // if turn matches player
-      if (turn && board.getSide(cur) == 'red' || !turn && board.getSide(cur) == 'black') {
+      if (turn && board.getSide(cur) == 'red') {
+      // if (turn && board.getSide(cur) == 'red' || !turn && board.getSide(cur) == 'black') {
         if (board.isChess(cur)) { // is chess
           $(this).removeClass('not-select');
           $(this).addClass('select');
@@ -47,7 +49,20 @@ chessDom.on('click', function () {
             let temp_store = board.moveChess(cur, next);
             if (temp_store.game == PLAYING && temp_store.move) { // game continue and move successfully, change turn
               turn = !turn;
-            } else {  // game end
+              // AI moves
+              let ai_move = ai.MiniMaxSearch(board.getBoard(), 2);
+              let ai_score = board.moveChess(ai_move.origin, ai_move.next);
+              if (ai_score.game == PLAYING && temp_store.move) {
+                turn = !turn;
+              } else if (ai_score.game != PLAYING){
+                if (ai_score.game == RED_WIN) {
+                  alert('RED WIN');
+                } else {
+                  alert('BLACK WIN');
+                }
+                gameState = ai_score.game;
+              }
+            } else if (temp_store.game != PLAYING){  // game end
               if (temp_store.game == RED_WIN) {
                 alert('RED WIN');
               } else {
@@ -67,6 +82,19 @@ chessDom.on('click', function () {
         let temp_store = board.moveChess(cur, next);
         if (temp_store.game == PLAYING && temp_store.move) { // game continue and move successfully, change turn
           turn = !turn;
+          // AI moves
+          let ai_move = ai.MiniMaxSearch(board.getBoard(), 2);
+          let ai_score = board.moveChess(ai_move.origin, ai_move.next);
+          if (ai_score.game == PLAYING && temp_store.move) {
+            turn = !turn;
+          } else if (ai_score.game != PLAYING) {
+            if (ai_score.game == RED_WIN) {
+              alert('RED WIN');
+            } else {
+              alert('BLACK WIN');
+            }
+            gameState = ai_score.game;
+          }
         } else if (temp_store.game != PLAYING) {  // game end
           if (temp_store.game == RED_WIN) {
             alert('RED WIN');
