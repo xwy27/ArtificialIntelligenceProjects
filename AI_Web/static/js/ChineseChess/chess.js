@@ -248,6 +248,7 @@ class Chess {
       else {
         for (let j = i - 1; j >= MIN_COL; --j) {
           killPos = twoToOne(j, pos.y);
+          if (this.isSameSide(board[killPos], board[position]))  break;
           if (board[killPos] != '0' && !this.isSameSide(board[killPos], board[position])) {
             ans.push(killPos);
             break;
@@ -262,6 +263,7 @@ class Chess {
       else {
         for (let j = i + 1; j <= MAX_COL; ++j) {
           killPos = twoToOne(j, pos.y);
+          if (this.isSameSide(board[killPos], board[position]))  break;
           if (board[killPos] != '0' && !this.isSameSide(board[killPos], board[position])) {
             ans.push(killPos);
             break;
@@ -276,6 +278,7 @@ class Chess {
       else {
         for (let j = i - 1; j >= MIN_ROW; --j) {
           killPos = twoToOne(pos.x, j);
+          if (this.isSameSide(board[killPos], board[position]))  break;
           if (board[killPos] != '0' && !this.isSameSide(board[killPos], board[position])) {
             ans.push(killPos);
             break;
@@ -290,6 +293,7 @@ class Chess {
       else {
         for (let j = i + 1; j <= MAX_ROW; ++j) {
           killPos = twoToOne(pos.x, j);
+          if (this.isSameSide(board[killPos], board[position]))  break;
           if (board[killPos] != '0' && !this.isSameSide(board[killPos], board[position])) {
             ans.push(killPos);
             break;

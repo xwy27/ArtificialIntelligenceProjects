@@ -50,3 +50,9 @@ body {
 .not-select {
   
 }
+
+.hint {
+  opacity: 0.5;
+  background: url(/static/img/ChineseChess/OOS.GIF);
+  background-size: cover;
+}

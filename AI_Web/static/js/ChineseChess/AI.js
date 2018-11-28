@@ -9,6 +9,9 @@ class AI {
    * @param {*} board the board to be estimated
    */
   calcBoardValue(board) {
+    if (getBoardState(board) == RED_WIN)  return -Infinity;
+    if (getBoardState(board) == BLACK_WIN)  return Infinity;
+
     let MAXScore = 0, MINScore = 0;
     for (let index = 0; index < board.length; ++index) {
       switch (board[index]) {
@@ -16,43 +19,43 @@ class AI {
           MINScore += ROOK_VALUE[index];
           break;
         case 'R': // MAX rook
-          MAXScore += ROOK_VALUE[index];
+          MAXScore += ROOK_VALUE[89-index];
           break;
         case 'n': // MIN knight
           MINScore += KNIGHT_VALUE[index];
           break;
         case 'N': // MAX knight
-          MAXScore += KNIGHT_VALUE[index];
+          MAXScore += KNIGHT_VALUE[89-index];
           break;
         case 'b': // MIN bishop
           MINScore += ADVISOR_BISHOP_VALUE[index];
           break;
         case 'B': // MAX bishop
-          MAXScore += ADVISOR_BISHOP_VALUE[index];
+          MAXScore += ADVISOR_BISHOP_VALUE[89-index];
           break;
         case 'a': // MIN advisor
           MINScore += ADVISOR_BISHOP_VALUE[index];
           break;
         case 'A': // MAX advisor
-          MAXScore += ADVISOR_BISHOP_VALUE[index];
+          MAXScore += ADVISOR_BISHOP_VALUE[89-index];
           break;
         case 'k': // MIN king
           MINScore += KING_PAWN_VALUE[index];
           break;
         case 'K': // MAX king
-          MAXScore += KING_PAWN_VALUE[index];
+          MAXScore += KING_PAWN_VALUE[89-index];
           break;
         case 'c': // MIN cannon
           MINScore += CANNON_VALUE[index];
           break;
         case 'C': // MAX cannon
-          MAXScore += CANNON_VALUE[index];
+          MAXScore += CANNON_VALUE[89-index];
           break;
         case 'p': // MIN pawn
           MINScore += KING_PAWN_VALUE[index];
           break;
         case 'P': // MAX pawn
-          MAXScore += KING_PAWN_VALUE[index];
+          MAXScore += KING_PAWN_VALUE[89-index];
           break;
       }
     }
@@ -113,18 +116,13 @@ class AI {
       Closed.push(node);  // Search finish
 
       // if game finish at this node, no need to search
-      if (getBoardState(node.getBoard()) == RED_WIN) {
-        node.setValue(-Infinity);
-        continue;
-      } else if (getBoardState(node.getBoard()) == BLACK_WIN) {
-        node.setValue(Infinity);
+      if (node.getValue() == Infinity || node.getValue() == -Infinity) {
         continue;
       }
 
       // find child nodes
       let child = this.createChildren(node);
 
-      
       // if k depth match, break
       if (child[0].getDepth() > k) {
         break;

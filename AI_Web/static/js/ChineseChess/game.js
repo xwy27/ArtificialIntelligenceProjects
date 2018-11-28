@@ -12,6 +12,24 @@ chessDom.each(function (index, value) {
   $(this).attr('data-index', index).addClass('not-select');
 });
 
+/**
+ * AI moves one step
+ */
+function AIMove() {
+  let ai_move = ai.MiniMaxSearch(board.getBoard(), 3);
+  let ai_score = board.moveChess(ai_move.origin, ai_move.next);
+  if (ai_score.game == PLAYING && ai_score.move) {
+    turn = !turn;
+  } else if (ai_score.game != PLAYING) {
+    if (ai_score.game == RED_WIN) {
+      alert('RED WIN');
+    } else {
+      alert('BLACK WIN');
+    }
+    gameState = ai_score.game;
+  }
+}
+
 // Set click event for chess
 chessDom.on('click', function () {
   if (gameState == PLAYING) { // Only playing could play
@@ -50,18 +68,7 @@ chessDom.on('click', function () {
             if (temp_store.game == PLAYING && temp_store.move) { // game continue and move successfully, change turn
               turn = !turn;
               // AI moves
-              let ai_move = ai.MiniMaxSearch(board.getBoard(), 2);
-              let ai_score = board.moveChess(ai_move.origin, ai_move.next);
-              if (ai_score.game == PLAYING && temp_store.move) {
-                turn = !turn;
-              } else if (ai_score.game != PLAYING){
-                if (ai_score.game == RED_WIN) {
-                  alert('RED WIN');
-                } else {
-                  alert('BLACK WIN');
-                }
-                gameState = ai_score.game;
-              }
+              AIMove();
             } else if (temp_store.game != PLAYING){  // game end
               if (temp_store.game == RED_WIN) {
                 alert('RED WIN');
@@ -83,18 +90,7 @@ chessDom.on('click', function () {
         if (temp_store.game == PLAYING && temp_store.move) { // game continue and move successfully, change turn
           turn = !turn;
           // AI moves
-          let ai_move = ai.MiniMaxSearch(board.getBoard(), 2);
-          let ai_score = board.moveChess(ai_move.origin, ai_move.next);
-          if (ai_score.game == PLAYING && temp_store.move) {
-            turn = !turn;
-          } else if (ai_score.game != PLAYING) {
-            if (ai_score.game == RED_WIN) {
-              alert('RED WIN');
-            } else {
-              alert('BLACK WIN');
-            }
-            gameState = ai_score.game;
-          }
+          AIMove();
         } else if (temp_store.game != PLAYING) {  // game end
           if (temp_store.game == RED_WIN) {
             alert('RED WIN');
@@ -112,11 +108,24 @@ chessDom.on('click', function () {
   }
 });
 
-chessDom.on('hover', function() {
-  let ans = board.getChessMovePos(parseInt($(this).attr('data-index')));
-  console.log(ans);
+/**
+ * Set hint for player
+ */
+let ans = [];
+chessDom.hover(function() {
+  let pos = $(this).attr('data-index');
+  if (turn && board.isChess(pos) && board.getSide(pos) == 'red') {
+    ans = board.getChessMovePos(parseInt(pos));
+    $.each(ans, (index, value) => {
+      $("img[data-index="+ value +"]").removeClass('not-select');
+      $("img[data-index="+ value +"]").addClass('hint');
+    });
+  }
 }, function() {
-
+  $.each(ans, (index, value) => {
+    $("img[data-index="+ value +"]").removeClass('hint');
+    $("img[data-index="+ value +"]").addClass('not-select');
+  });
 });
 
 /**

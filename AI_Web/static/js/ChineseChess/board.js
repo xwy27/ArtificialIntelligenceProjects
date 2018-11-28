@@ -145,6 +145,12 @@ class Board {
     } else {
       console.log("Invalid!");
     }
+    if (cur == next) {  // no way for ai to move, game over
+      return {
+        'move': false,
+        'game': RED_WIN
+      }
+    }
     return {
       'move': false,
       'game': this.getGameState()
