@@ -4,9 +4,11 @@ from django.shortcuts import render
 
 import numpy as np
 import math
+import copy
+
 class NeuralNetwork(object):
     
-    def __init__(self, layers):
+    def __init__(self, layers, speed):
         self.input_nodes = layers[0]
         self.hidden_nodes = layers[1]
         self.output_nodes = layers[2]
@@ -26,33 +28,34 @@ class NeuralNetwork(object):
         # bias for output
         temp = [0 for _ in range(layers[2])]
         self.bias.append(temp)
+
+        self.hidden = []
+        self.data = []
+        self.speed = speed
     
     def sigmod(self, z):
         return 1.0/(1.0+np.exp(-z))
-    
-    def sigmod_deriva(self, z):
-        y = self.sigmod(z)
-        return y * (1-y)
     
     def forword(self, data):
         if len(data) != self.input_nodes:
             print('FORWORD: size mismatch')
             return
         # calculate the hidden layer
-        hidden = []
+        self.hidden = []
+        self.data = data
         for h in range(self.hidden_nodes):
             temp = 0
             for index, value in enumerate(data):
                 temp += value * self.weight[0][index][h]
             temp += self.bias[0][h]
-            hidden.append(temp)
+            self.hidden.append(temp)
         
         # calculate the output layer
-        hidden = [self.sigmod(t) for t in hidden]
+        self.hidden = [self.sigmod(t) for t in self.hidden]
         res = []
         for o in range(self.output_nodes):
             temp = 0
-            for index, value in enumerate(hidden):
+            for index, value in enumerate(self.hidden):
                 temp += value * self.weight[1][index][o]
             temp += self.bias[1][o]
             res.append(temp)
@@ -62,15 +65,26 @@ class NeuralNetwork(object):
         if len(target) != len(output):
             print('LOSS: size mismatch')
             return
-        e = 0
+        e = []
         for index, value in enumerate(target):
-            e += math.pow((value - output[index]), 2)
-        return e/2
+            e.append(value - output[index])
+        return e
     
-    # def backPropagation(self, loss):
+    def backPropagation(self, loss):
+        # Copy the origin weight
+        oriWeight = copy.deepcopy(self.weight)
+
+        # Computing new weight between hidden and output layer
+        for k in range(self.output_nodes):
+            self.bias[1][k] = self.bias[1][k] + self.speed * loss[k]
+            for j in range(self.hidden_nodes):
+                self.weight[1][k][j] = oriWeight[1][k][j] + self.speed * self.hidden[j] * loss[k]
         
-                
-
-            
-
-    
+        # Computing new weight between input and hidden layer
+        for j in range(self.hidden_nodes):
+            outputSum = 0
+            for k in range(self.output_nodes):
+                outputSum += oriWeight[1][k][j] * loss[k]
+            self.bias[0][j] = self.bias[0][j] + self.speed * self.hidden[j] * (1 - self.hidden[j]) * outputSum
+            for i in range(self.input_nodes):
+                self.weight[0][j][i] = oriWeight[0][j][i] + self.speed * self.hidden[j] * (1 - self.hidden[j]) * self.data[i] * outputSum
