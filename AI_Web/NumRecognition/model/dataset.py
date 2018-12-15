@@ -2,17 +2,17 @@
 import os
 import os.path
 
-'''
-This function is used to parse the DS file at the given path to get images.
-Paramater: 
-  - pathToDS: string path to indicate the file
-Return Value:
-  - pixels: array of type bytes, every byte is a pixel
-  - height: height of each image
-  - width:  width of each image 
-  - count:  number of images 
-'''
 def parseDSImage(pathToDS):
+  '''
+  This function is used to parse the DS file at the given path to get images.
+  Paramater: 
+    - pathToDS: string path to indicate the file
+  Return Value:
+    - pixels: array of type bytes, every byte is a pixel
+    - height: height of each image
+    - width:  width of each image 
+    - count:  number of images 
+  '''
   if not os.path.exists(pathToDS):
     raise IOError
   with open(pathToDS) as f:
@@ -32,15 +32,15 @@ def parseDSImage(pathToDS):
 
   return (pixels, height, width, count)
 
-'''
-This function is used to parse the DS file at the given path to get labels.
-Paramater: 
-  - pathToDS: string path to indicate the file
-Return Value:
-  - lables: array of type bytes, every byte is a pixel
-  - count:  number of labels
-'''
 def parseDSLabel(pathToDS):
+  '''
+  This function is used to parse the DS file at the given path to get labels.
+  Paramater: 
+    - pathToDS: string path to indicate the file
+  Return Value:
+    - lables: array of type bytes, every byte is a pixel
+    - count:  number of labels
+  '''
   if not os.path.exists(pathToDS):
     raise IOError
   with open(pathToDS) as f:
