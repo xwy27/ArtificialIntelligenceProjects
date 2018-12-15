@@ -14,8 +14,9 @@ def parseDSImage(pathToDS):
     - count:  number of images 
   '''
   if not os.path.exists(pathToDS):
+    print(os.path.abspath('.'))
     raise IOError
-  with open(pathToDS) as f:
+  with open(pathToDS, "rb") as f:
     f.read(4) # unused magic number
 
     count = int.from_bytes(f.read(4), byteorder='big')
@@ -43,7 +44,7 @@ def parseDSLabel(pathToDS):
   '''
   if not os.path.exists(pathToDS):
     raise IOError
-  with open(pathToDS) as f:
+  with open(pathToDS, "rb") as f:
     f.read(4) # unused magic number
 
     count = int.from_bytes(f.read(4), byteorder='big')

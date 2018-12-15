@@ -5,13 +5,13 @@ import math
 
 net = neuralNetwork.NeuralNetwork([784, 256, 1], 0.2)
 
-images = dataset.parseDSImage('./data/train-images.idx3-ubyte')
-labels = dataset.parseDSLabel('./data/train-labels.idx1-ubyte')
+images = dataset.parseDSImage('data/train-images-idx3-ubyte')
+labels = dataset.parseDSLabel('data/train-labels-idx1-ubyte')
 
 
 for index, value in enumerate(images[0]):
     res = net.forword(value)
-    loss = net.loss(labels[0], res)
+    loss = net.loss(labels[0][index], res)
 
     E = 0
     for l in loss:

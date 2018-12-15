@@ -75,13 +75,13 @@ class NeuralNetwork(object):
         for k in range(self.output_nodes):
             self.bias[1][k] = self.bias[1][k] + self.speed * loss[k]
             for j in range(self.hidden_nodes):
-                self.weight[1][k][j] = oriWeight[1][k][j] + self.speed * self.hidden[j] * loss[k]
+                self.weight[1][j][k] = oriWeight[1][j][k] + self.speed * self.hidden[j] * loss[k]
         
         # Computing new weight between input and hidden layer
         for j in range(self.hidden_nodes):
             outputSum = 0
             for k in range(self.output_nodes):
-                outputSum += oriWeight[1][k][j] * loss[k]
+                outputSum += oriWeight[1][j][k] * loss[k]
             self.bias[0][j] = self.bias[0][j] + self.speed * self.hidden[j] * (1 - self.hidden[j]) * outputSum
             for i in range(self.input_nodes):
-                self.weight[0][j][i] = oriWeight[0][j][i] + self.speed * self.hidden[j] * (1 - self.hidden[j]) * self.data[i] * outputSum
+                self.weight[0][i][j] = oriWeight[0][i][j] + self.speed * self.hidden[j] * (1 - self.hidden[j]) * self.data[i] * outputSum
