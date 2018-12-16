@@ -15,24 +15,111 @@ $(document).ready(function() {
   var grids = $(".part");
   var init = [[2, 8, 3], [1, 6, 4], [7, 9, 5]];
   var final = [[1, 2, 3], [8, 9, 4], [7, 6, 5]];
-  
+  var all = 0;
+  var choose_h1 = true; //TODO: add switch button
   var playing = false;
+  var last = [[2, 8, 3], [1, 6, 4], [7, 9, 5]]; // last shuffle result
   initial();
-  
+  //aStar();
+
   function initial() {
     open = [];
     closed = [];
     steps = 0;
-    playing = true;
+    all = 0;
+    
     // TODO add shuffle(init) function later
+    if(choose_h1) {
+      init = shuffle();
+      // copy init->last
+      for(var i = 0; i < 3; i++) {
+        for(var j = 0; j < 3; j++) {
+          last[i][j] = init[i][j];
+        }
+      }
+    }
+    else {
+      // copy last->init
+      for(var i = 0; i < 3; i++) {
+        for(var j = 0; j < 3; j++) {
+          init[i][j] = last[i][j];
+        }
+      }
+    }
     init_node = new Node(init);
     final_node = new Node(final);
-    // TODO change h1 to h2
-    init_node.h = h1(init_node, final_node);
+    if(choose_h1)
+      init_node.h = h1(init_node, final_node);
+    else
+      init_node.h = h2(init_node, final_node);      
     init_node.g = 0;
     open.push(init_node);
+    show(init_node);
+    playing = true;
+    aStar();
   }
   
+  function shuffle() {
+    //var res = [1, 2, 3, 8, 9, 4, 7, 6, 5];
+    var res = [2, 8, 3, 1, 6, 4, 7, 9, 5];
+    var tmp = 7;
+    // solution will occur within 100 steps
+    var STEPS = Math.floor(Math.random() * 20);
+    for(var i = 0; i < STEPS; i++) {
+      var randir = Math.floor(Math.random() * 4)
+      // move up blank
+      if(randir == 0) {
+        if(tmp <= 2) continue;
+        res[tmp] = res[tmp-3];
+        res[tmp-3] = 9;
+        tmp -= 3;
+      }
+      //move left
+      else if(randir == 1) {
+        if(Math.round(tmp%3) == 0) continue;
+        res[tmp] = res[tmp-1];
+        res[tmp-1] = 9;
+        tmp -= 1;
+      }
+      //move down
+      else if(randir == 2) {
+        if(tmp >= 6) continue;
+        res[tmp] = res[tmp+3];
+        res[tmp+3] = 9;
+        tmp += 3;
+      }
+      // move right
+      else {
+        if(Math.round((tmp+1)%3) == 0) continue;
+        res[tmp] = res[tmp+1];
+        res[tmp+1] = 9;
+        tmp += 1;
+      }
+      
+    }
+    /*for(var i = 0; i < 10; i++) {
+      res.sort(function() {
+        return Math.random()>0.5?-1:1;
+      });
+      for(var j = 0; j < 9; j+=3) {
+        tmp = res[j];
+        res[j] = res[j+1];
+        res[j+1] = res[j+2];
+        res[j+2] = tmp;
+      }
+    }*/
+    if(checkPairs(res)) {
+      var array = new Array();
+      for(var i = 0; i < 3; i++) {
+        array[i] = new Array(i);
+        for(var j = 0; j < 3; j++) {
+          array[i][j] = res[i*3+j];
+        }
+      }
+      return array;
+    }
+    else return shuffle();
+  }
   
   function show(node) {
     for(var i = 0; i < grids.length; i++) {
@@ -41,10 +128,37 @@ $(document).ready(function() {
         temp = " ";
       grids.eq(i).text(temp);
     }
-    $(".content p").eq(0).text("Step i: " + steps); 
-    $(".content p").eq(1).text("Open: "+open.length);
+    // TODO add nodes to open list
+    $(".content p").eq(1).text("Step i: " + steps); 
+    if(playing) {
+      $(".content p").eq(2).text("Open: "+open.length + " nodes");
+      //TODO: show var all
+      //$(".content p").eq(3).text("Expanded: " + all + " nodes");
+    }
+    else {
+       $(".content p").eq(2).text("Open: 0 nodes");
+       //delete all nodes
+       $(".content p").eq(3).nextAll().empty();
+     }
   }
   
+  function showPath(node) {
+    while(node != null) {
+      //console.log(node.list);
+      var tmpstr = "<p>";
+      for(var i = 0; i < 3; i++) {
+        for(var j = 0; j < 3; j++) {
+          tmpstr += node.list[i][j];
+          tmpstr += " ";
+        }
+        if(i != 2) tmpstr += "<br/>";
+      }
+      var insert = $(tmpstr+"<sp/>h(n)="+node.h+"</p>");
+      $(".content").append(insert);
+      node = node.parent;
+    }
+  }
+
   function diff(state_a, state_b) {
     var count = 0;
     for(var i = 0; i < 3; i++) {
@@ -75,13 +189,13 @@ $(document).ready(function() {
     // calculate the shortest path
     for(var i = 0; i < 9; i++) {
       for(var j = 0; j < 9; j++) {
-          if(state_a[parseInt(i/3)][Math.round(i%3)] == 9 
-          || state_b[parseInt(j/3)][Math.round(j%3)] == 9)
+          if(state_a.list[parseInt(i/3)][Math.round(i%3)] == 9 
+          || state_b.list[parseInt(j/3)][Math.round(j%3)] == 9)
             continue;   
-          if(state_a[parseInt(i/3)][Math.round(i%3)] == 
-          state_b[parseInt(j/3)][Math.round(j%3)])
-            count += (abs(parseInt(i/3)-parseInt(j/3)) + 
-            abs(Math.round(i%3)-Math.round(j%3)));
+          if(state_a.list[parseInt(i/3)][Math.round(i%3)] == 
+          state_b.list[parseInt(j/3)][Math.round(j%3)])
+            count += (Math.abs(parseInt(i/3)-parseInt(j/3)) + 
+            Math.abs(Math.round(i%3)-Math.round(j%3)));
       }
     }
     return count;
@@ -91,11 +205,13 @@ $(document).ready(function() {
     var count = 0;
     for(var i = 0; i < 8; i++) {
         for(var j = i+1; j < 9; j++) {
-              if(li[parseInt(i/3)][Math.round(i%3)] > 
-              li[parseInt(j/3)][Math.round(j%3)]) count++;
+              //if(li[parseInt(i/3)][Math.round(i%3)] > 
+              //li[parseInt(j/3)][Math.round(j%3)])
+              if(li[i] > li[j])
+               count++;
         }
     }
-    return (count % 2 == 0);
+    return (count % 2 != 0);
   }
   
   function getNodeFromOpen() {
@@ -164,14 +280,18 @@ $(document).ready(function() {
       show(temp);
       if(diff(temp, final_node) == 0) {
         playing = false;
+        showPath(temp);
         return;
       }
       for(var i = 0; i < 4; i++) {
         var next = aStep(temp, move_dirx[i], move_diry[i]);
         if(next.list == null) continue;
         if(nodeInList(next, closed)) continue;
+        //console.log(i);
+        //console.log(next);
         next.g = temp.g + 1;
-        next.h = h1(next, final_node);
+        if(choose_h1) next.h = h1(next, final_node);
+        else next.h = h2(next, final_node);
         next.parent = temp;
         var in_open = false;
         for(var j = 0; j < open.length; j++) {
@@ -188,6 +308,7 @@ $(document).ready(function() {
         }
         if(!in_open) {
           open.push(next);
+          all++;
         }
       }
       steps++;
@@ -199,8 +320,20 @@ $(document).ready(function() {
       initial();
     }
     else {
+      //alert(choose_h1);
       aStar();
-      if(playing == false) alert("Find a solution!");
+      if(!playing) { 
+        alert("Find a solution!");
+        if(choose_h1) {
+          $(".content p").eq(0).text("h2(n): ");
+          choose_h1 = false;
+        }
+        else {
+          $(".content p").eq(0).text("h1(n): ");
+          choose_h1 = true;
+        }
+      }
     }
   });
 });
+
