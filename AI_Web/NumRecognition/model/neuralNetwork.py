@@ -83,7 +83,7 @@ class NeuralNetwork(object):
         lt = l.transpose()
         ht = self.hidden.transpose()
 
-        outputFactor = self.speed * self.hidden * (self.hidden * -1 + 1) * (self.hoWeight.dot(lt).transpose())
+        outputFactor = self.speed * (self.hidden - self.hidden ** 2) * (self.hoWeight.dot(lt).transpose())
         self.hBias = self.hBias + outputFactor
         self.ihWeight = self.ihWeight + self.data.transpose() * outputFactor
         # for j in range(self.hidden_nodes):

@@ -1,6 +1,7 @@
 # -*- coding:utf-8 -*-
 import os
 import os.path
+import struct
 
 def parseDSImage(pathToDS):
   '''
@@ -29,7 +30,8 @@ def parseDSImage(pathToDS):
 
     pixels = []
     for _ in range(count):
-      pixels.append(f.read(height * width))
+      datablock = f.read(height * width)
+      pixels.append(struct.unpack('B' * len(datablock), datablock))
 
   return (pixels, height, width, count)
 
@@ -52,6 +54,6 @@ def parseDSLabel(pathToDS):
 
     lables = []
     for _ in range(count):
-      lables.append(f.read(1))
+      lables.append(struct.unpack('B', f.read(1)))
 
   return (lables, count)
