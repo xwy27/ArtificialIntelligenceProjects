@@ -267,6 +267,4 @@ pip-selfcheck.json
 
 # Custom gitignore
 .vscode
-.AI_Web/NumRecognition/model/data/
-train-images.idx3-ubyte
-train-labels.idx1-ubyte
+/AI_Web/NumRecognition/model/data
