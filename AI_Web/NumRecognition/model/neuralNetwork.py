@@ -1,5 +1,5 @@
 # -*- coding:utf-8 -*-
-import cupy as cp
+import numpy as cp
 import math
 import copy
 
