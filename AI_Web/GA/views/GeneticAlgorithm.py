@@ -15,8 +15,6 @@ def evaluate(listOfCities):
   return semiResult
 
 
-
-
 class Individual:
   def __init__(self, gene):
     self.gene = gene
@@ -28,15 +26,16 @@ class Individual:
 
 class Population:
   def __init__(self,initgene):
-    self.groupSize = 1000
-    self.mutationRate = 0.05
-    self.crossoverRate = 0.8
+    self.groupSize = 30
+    self.mutationRate = 0.3
+    self.crossoverRate = 0.6
     self.geneSize = 151
     self.initgene = initgene
     self.matingPool = []
     self.generation = 1
     self.result = Individual(initgene)
     self.result.updateFitness()
+    #self.selectPool = []
 
     self.ancients()
 
@@ -45,7 +44,7 @@ class Population:
     init population with random initgene
     '''
     self.matingPool = []
-    for _ in range(self.groupSize):
+    for _ in range(2 * self.groupSize):
       tmpgene = getNeighborFieldRandom(self.initgene)[0]
       tmp = Individual(tmpgene)
       tmp.updateFitness()
@@ -63,17 +62,23 @@ class Population:
     p1 = 0
     p2 = 0
     while(p1 == p2):
-      p1 = random.randint(0, self.groupSize-1)
-      p2 = random.randint(0, self.groupSize-1)
+      p1 = random.randint(0, len(self.matingPool)-1)
+      p2 = random.randint(0, len(self.matingPool)-1)
   
     if self.matingPool[p1].fitness >= self.matingPool[p2].fitness:
+      #tmp = self.selectPool[p1]
+      #del self.selectPool[p1]
+      #print(tmp)
       return self.matingPool[p1]
     else:
+      #tmp = self.matingPool[p2]
+      #del self.selectPool[p2]
       return self.matingPool[p2]
      
   def crossover(self):
     '''
     multipoint crossover, k = 2
+    parents remain in the pool
     '''
     if random.random() > self.crossoverRate:
       return None
@@ -84,32 +89,36 @@ class Population:
       parenta = random.randint(0, self.groupSize-1)
       parentb = random.randint(0, self.groupSize-1)
 
-    pos = random.randint(1, self.geneSize - 2)
+    posa = random.randint(1, self.geneSize - 2)
+    posb = random.randint(posa, self.geneSize - 2)
 
     tmpa = copy.deepcopy(self.matingPool[parenta].gene)
     tmpb = copy.deepcopy(self.matingPool[parentb].gene)
 
     # change tail
-    atail = tmpa[pos:]
-    tmpa[pos:] = tmpb[pos:]
-    tmpb[pos:] = atail
+    atail = tmpa[posa:posb]
+    tmpa[posa:posb] = tmpb[posa:posb]
+    tmpb[posa:posb] = atail
 
     # record duplicate gene position
     adup = []
     bdup = []
-    for i in range(1,pos):
-      for j in range(pos,self.geneSize-1):
+    for i in range(1,posa):
+      for j in range(posa,posb):
         if tmpa[i] == tmpa[j]:
           adup.append(j)
         if tmpb[i] == tmpb[j]:
           bdup.append(j)
 
-    # exchange duplicate position gene
-    #print(tmpa)
-    #print(tmpb)
-    #print("a: "+str(len(adup)))
-    #print("b: "+str(len(bdup)))
+    for i in range(posb,self.geneSize-1):
+      for j in range(posa,posb):
+        if tmpa[i] == tmpa[j]:
+          adup.append(j)
+        if tmpb[i] == tmpb[j]:
+          bdup.append(j)
 
+
+    # exchange duplicate position gene
     for i in range(len(adup)):
       tmpa[adup[i]], tmpb[bdup[i]] = tmpb[bdup[i]], tmpa[adup[i]]
 
@@ -121,8 +130,12 @@ class Population:
       self.result = childa
     if(childb.fitness > self.result.fitness):
       self.result = childb
+
     self.matingPool.append(childa)
     self.matingPool.append(childb)
+
+    #self.matingPool[parenta] = childa
+    #self.matingPool[parentb] = childb
 
   def mutation(self):
     '''
@@ -132,28 +145,25 @@ class Population:
       return None
     p = random.randint(0, len(self.matingPool)-1)
     
-    evl = 0
-    choose = []
-    res2 = getNeighborFieldSwitch2(self.matingPool[p].gene)
-    for res in res2:
-      if(evaluate(res) > evl):
-        evl = evaluate(res)
-        choose = res
-    
+    res2 = getNeighborFieldSwitch2(self.matingPool[p].gene)[0]
+    evl = evaluate(res2)
+    choose = res2
+
     res3 = getNeighborFieldSwitch3(self.matingPool[p].gene)
     for res in res3:
-      if(evaluate(res) > evl):
+      if(evaluate(res) < evl):
         evl = evaluate(res)
         choose = res
     res4 = getNeighborFieldSwitch4(self.matingPool[p].gene)
     for res in res4:
-      if(evaluate(res) > evl):
+      if(evaluate(res) < evl):
         evl = evaluate(res)
         choose = res
-    #gener = getNeighborFieldRandom(self.matingPool[p].gene)
-    #if(evaluate(gener) > evl):
-    #  evl = evaluate(gener)
-    #  choose = gener
+    #resr = getNeighborFieldRandom(self.matingPool[p].gene)
+    #for res in resr:
+    #  if(evaluate(res) > evl):
+    #    evl = evaluate(res)
+    #    choose = res
 
     mutated = Individual(choose)
     mutated.updateFitness()
@@ -165,12 +175,14 @@ class Population:
   def update(self):
     newPool = []
     newPool.append(self.result)
-    while len(newPool) < self.groupSize:
+    #del self.selectPool[:]
+    #self.selectPool = copy.deepcopy(self.matingPool)
+    while len(newPool) <= self.groupSize:
         newPool.append(self.selectOne())
     self.matingPool = newPool
     for _ in range(self.groupSize):
       self.crossover()
-    for _ in range(self.groupSize):
+    for _ in range(len(self.matingPool)):
       self.mutation()
     self.generation += 1
 
@@ -240,8 +252,12 @@ def getNeighborFieldRandom(listOfCities):
 def GA():
   result = [x for x in range(1, len(points) + 1)]
   result.append(1)
-
+  population = Population(result)
   print('Initial score: ' + str(evaluate(result)) + '\n')
+  print('group size: '+str(population.groupSize)+'\n')
+  print('mutation rate: '+str(population.mutationRate)+'\n')
+  print('crossover rate: '+str(population.crossoverRate)+'\n')
+
   for x in range(0, 3):
     sys.stdout.write('\033[F\033[K')
     print(str(3 - x) + ' seconds to start local search...')
@@ -249,12 +265,12 @@ def GA():
     
   sys.stdout.write('\033[F\033[K')
   print('-------Start local search-------\n\n\n\n')
-  population = Population(result)
+  
 
   for counter in range(1, 400):
     for _ in range(10):
       population.update()
-    sys.stdout.write('\033[F\033[K\033[F\033[K\033[F\033[K\033[F\033[K')
+    sys.stdout.write('\033[F\033[K\033[F\033[K\033[F\033[K')
     print('Processing: ' + str(counter/4) + '%')
     print(str(population.generation) + ' times of operations has been taken.')
     print('Current score: ' + str(population.getResult()))
@@ -283,11 +299,3 @@ for pointX in points:
       distance[-1].append(distance[pointY[0] - 1][pointX[0] - 1])
 
 GA()
-
-def GA_Step():
-  global points
-  pass
-
-def GA_Clear_Data():
-  global points
-  pass
