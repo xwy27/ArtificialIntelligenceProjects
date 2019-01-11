@@ -1,59 +1,121 @@
-\documentclass[12pt]{article}%
-\usepackage{amsfonts}
-\usepackage{fancyhdr}
-\usepackage{comment}
-\usepackage[a4paper, top=2.5cm, bottom=2.5cm, left=2.2cm, right=2.2cm]%
-{geometry}
-\usepackage{times}
-\usepackage{amsmath}
-\usepackage{changepage}
-\usepackage{amssymb}
-\usepackage{graphicx}%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% University Assignment Title Page 
+% LaTeX Template
+% Version 1.0 (27/12/12)
+%
+% This template has been downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% Original author:
+% WikiBooks (http://en.wikibooks.org/wiki/LaTeX/Title_Creation)
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+% 
+% Instructions for using this template:
+% This title page is capable of being compiled as is. This is not useful for 
+% including it in another document. To do this, you have two options: 
+%
+% 1) Copy/paste everything between \begin{document} and \end{document} 
+% starting at \begin{titlepage} and paste this into another LaTeX file where you 
+% want your title page.
+% OR
+% 2) Remove everything outside the \begin{titlepage} and \end{titlepage} and 
+% move this file to the same directory as the LaTeX file you wish to add it to. 
+% Then add \input{./title_page_1.tex} to your LaTeX file where you want your
+% title page.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\title{Title page with logo}
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+\documentclass[UTF-8,12pt]{article}
 \usepackage[UTF8]{ctex}
+\usepackage[english]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage{amsmath}
+\usepackage{graphicx}
 \usepackage{hyperref}
-\usepackage{appendix}
-\usepackage{listings}
-\setcounter{MaxMatrixCols}{30}
-\newtheorem{theorem}{Theorem}
-\newtheorem{acknowledgement}[theorem]{Acknowledgement}
-\newtheorem{algorithm}[theorem]{Algorithm}
-\newtheorem{axiom}{Axiom}
-\newtheorem{case}[theorem]{Case}
-\newtheorem{claim}[theorem]{Claim}
-\newtheorem{conclusion}[theorem]{Conclusion}
-\newtheorem{condition}[theorem]{Condition}
-\newtheorem{conjecture}[theorem]{Conjecture}
-\newtheorem{corollary}[theorem]{Corollary}
-\newtheorem{criterion}[theorem]{Criterion}
-\newtheorem{definition}[theorem]{Definition}
-\newtheorem{example}[theorem]{Example}
-\newtheorem{exercise}[theorem]{Exercise}
-\newtheorem{lemma}[theorem]{Lemma}
-\newtheorem{notation}[theorem]{Notation}
-\newtheorem{problem}[theorem]{Problem}
-\newtheorem{proposition}[theorem]{Proposition}
-\newtheorem{remark}[theorem]{Remark}
-\newtheorem{solution}[theorem]{Solution}
-\newtheorem{summary}[theorem]{Summary}
-\newenvironment{proof}[1][Proof]{\textbf{#1.} }{\ \rule{0.5em}{0.5em}}
-
-\newcommand{\Q}{\mathbb{Q}}
-\newcommand{\R}{\mathbb{R}}
-\newcommand{\C}{\mathbb{C}}
-\newcommand{\Z}{\mathbb{Z}}
+\usepackage[colorinlistoftodos]{todonotes}
 
 \begin{document}
 
-\title{人工智能 实验报告：模拟退火算法}
-\author{熊永琦 16340258}
-\date{\today}
-\maketitle
+\begin{titlepage}
 
-\begin{center}
-本项目所有代码均已在 \href{https://github.com/xwy27/ArtificialIntelligenceProjects}{小组 Github 仓库} 开源
-\end{center}
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}} % Defines a new command for the horizontal lines, change thickness here
 
-\section{实验要求}
+\center % Center everything on the page
+ 
+%----------------------------------------------------------------------------------------
+%	HEADING SECTIONS
+%----------------------------------------------------------------------------------------
+
+\textsc{\LARGE \bfseries 中山大学 }\\[0.3cm] % Name of your university/college
+\textsc{\Large 数据科学与计算机学院}\\[0.5cm] % Major heading such as course name
+\textsc{\Large 软件工程}\\[0.3cm] % Major heading such as course name
+\textsc{\Large 人工智能}\\[0.5cm]
+ % Minor heading such as course title
+
+%----------------------------------------------------------------------------------------
+%	TITLE SECTION
+%----------------------------------------------------------------------------------------
+
+\HRule \\[0.4cm]
+{ \huge \bfseries 模拟退火算法实验报告}\\[0.03cm] % Title of your document
+\HRule \\[1.5cm]
+
+ 
+%----------------------------------------------------------------------------------------
+%	AUTHOR SECTION
+%----------------------------------------------------------------------------------------
+
+\begin{minipage}{0.4\textwidth}
+\begin{flushleft} \large
+\emph{Submitted By:}\\
+徐伟元 16340261\\
+熊永琦 16340258\\
+李天译 16340122
+\end{flushleft}
+\end{minipage}
+~
+\begin{minipage}{0.5\textwidth}
+\begin{flushright} \large
+\emph{Submitted To:} \\
+王甲海\\ 教授\\ 大数据与计算智能研究所 % Supervisor's Name
+\end{flushright}
+\end{minipage}\\[1cm]
+
+% If you don't want a supervisor, uncomment the two lines below and remove the section above
+%\Large \emph{Author:}\\
+%John \textsc{Smith}\\[3cm] % Your name
+
+%----------------------------------------------------------------------------------------
+%	DATE SECTION
+%----------------------------------------------------------------------------------------
+
+{\large 2019-1-10}\\[1cm] % Date, change the \today to a set date if you want to be precise
+
+%----------------------------------------------------------------------------------------
+%	LOGO SECTION
+%----------------------------------------------------------------------------------------
+
+\includegraphics[width=2in]{logo.png}\\[0.5cm] % Include a department/university logo - this will require the graphicx package
+ 
+%----------------------------------------------------------------------------------------
+
+\vfill % Fill the rest of the page with whitespace
+
+\end{titlepage}
+
+
+\begin{abstract}
+    
+本实验利用模拟退火算法实现 TSP 问题求近似解，并提供图形化界面以及和局部搜索算法的对比。
+
+\end{abstract}
+
+\section{实验题目}
 
 在 TSPLIB（http://comopt.ifi.uni-heidelberg.de/software/TSPLIB95/，多个地址有备份；其他网站还可以找到有趣的 Art TSP 和 National TSP）中选一个大于100个城市数的 TSP 问题，完成如下要求：
 
@@ -112,18 +174,16 @@
 
 \subsection{测试结果}
 
-我们分别在进度为约 50\% 时和进度达到 100\% 时采集了数据，结果如下：
+我们分别在进度为约 50\% 时和进度达到 100\% 时采集了数据，结果如 Figure 1 所示。
 
-\ 
-
+\begin{figure}
+\centering
 \includegraphics[width=\textwidth]{mid.png}
-
 \includegraphics[width=\textwidth]{final.png}
-\begin{center}
-    FIGURE 1. 50\% 和 100\% 进度时结果
-\end{center}
+\caption{\label{fig:final}50\% 和 100\% 进度时结果.}
+\end{figure}
 
-其中，左侧均为局部搜索（爬山）算法，右侧均为模拟退火算法，Process 为当前算法迭代完成进度，Length 为当前选定路径的路径长度。我们通过调整参数，使得两个算法的完成速度相近。
+其中，Figure 1 左侧均为局部搜索（爬山）算法，右侧均为模拟退火算法，Process 为当前算法迭代完成进度，Length 为当前选定路径的路径长度。我们通过调整参数，使得两个算法的完成速度相近。
 
 \subsubsection{局部搜索}
 
@@ -144,7 +204,8 @@
 总的来说，如果用户对于解的质量要求不高，爬山算法能在最短时间内给出一个能够接受的解；而模拟退火会尽它所能给你一个更接近最优解的答案，当然，相对的，模拟退火的耗时可能会更长。
 
 \begin{thebibliography}{}
-\bibitem{besttsp} https://www.iwr.uni-heidelberg.de/groups/comopt/software/TSPLIB95/STSP.html
+\bibitem{besttsp} https://www.iwr.uni-heidelberg.de/groups/comopt/software/TSPLIB95/
+STSP.html
 \end{thebibliography}
 
 \end{document}
