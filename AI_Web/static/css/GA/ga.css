@@ -1,0 +1,11 @@
+/* Title bar */
+#SATitle .container {
+  padding-top: 20px;
+}
+
+/* Content */
+.chart,
+.chart>.column {
+  height: 550px !important;
+  margin-top: 10px;
+}

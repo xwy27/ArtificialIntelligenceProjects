@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'SA',
     'Astar',
     'ChineseChess',
+    'GA',
 ]
 
 MIDDLEWARE = [

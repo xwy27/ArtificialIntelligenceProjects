@@ -20,6 +20,7 @@ from django.conf.urls import url
 from SA.views import sa_views as sa
 from Astar.views import Astar_views as astar
 from ChineseChess.views import chess_views as chess
+from GA.views import ga_views as ga
 
 urlpatterns = [
     # url
@@ -27,11 +28,17 @@ urlpatterns = [
     path('SA/', sa.SA),
     path('Astar/', astar.Astar),
     path('Chess/', chess.chess),
+    path('GA/', ga.GA),
 
     # api
+    # SA
     url(r'api/SA_origin$', sa.SA_origin),
     url(r'api/SA_step$', sa.SA_step),
     url(r'api/SA_clear$', sa.SA_Clear),
     url(r'api/LS_step$', sa.LS_step),
     url(r'api/LS_clear$', sa.LS_Clear),
+    # GA
+    url(r'api/GA_origin$', ga.GA_origin),
+    url(r'api/GA_step$', ga.GA_step),
+    url(r'api/GA_clear$', ga.GA_Clear),
 ]

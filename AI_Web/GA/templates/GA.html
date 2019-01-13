@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+  <title>Genetic Algorithm</title>
+  <link rel="shortcut icon" href="/static/img/ai.jpg">
+
+  <!-- Source Library -->
+  <!-- jQuery -->
+  <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+  <!-- Semantic -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"></script>
+  <!-- eChart -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/4.1.0/echarts-en.common.js"></script>
+</head>
+
+<body>
+  <!-- Title Bar -->
+  <div id="SATitle" class="ui inverted vertical masthead center aligned segment">
+    <div class="ui text container">
+      <h1 class="ui inverted header">
+        Genetic Algorithm V.S. Simulated Annealing
+      </h1>
+      <div id="generate" class="ui huge primary button">Generate Chart</div>
+      <div id="clear" class="ui huge primary button">ReDraw Chart</div>
+    </div>
+  </div>
+
+  <div class="chart ui bottom attached grid">
+    <!-- GA Chart -->
+    <div class="eight wide column" id="GA-chart"></div>
+    <!-- SA Chart -->
+    <div class="eight wide column" id="SA-chart"></div>
+  </div>
+</body>
+
+<!-- Custom Library -->
+<link rel="stylesheet" type="text/css" href="/static/css/GA/ga.css">
+<script src="/static/js/GA/ga.js"></script>
+
+</html>

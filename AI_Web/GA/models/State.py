@@ -11,11 +11,11 @@ class GAState(models.Model):
   def __str__(self):
     return "%d : (%f, %f)" % (self.id, self.Process, self.Generations)
 
-class SAState(models.Model):
-  id = models.IntegerField(primary_key=True, default=0)
-  Process = models.FloatField(default=100)
-  Temperature = models.FloatField(default = 0)
-  Path = models.CharField(max_length=10000)
+# class SAState(models.Model):
+#   id = models.IntegerField(primary_key=True, default=0)
+#   Process = models.FloatField(default=100)
+#   Temperature = models.FloatField(default = 0)
+#   Path = models.CharField(max_length=10000)
 
-  def __str__(self):
-    return "%d : (%f, %f)" % (self.id, self.Process, self.Temperature)
+#   def __str__(self):
+#     return "%d : (%f, %f)" % (self.id, self.Process, self.Temperature)

@@ -3,7 +3,6 @@ from django.shortcuts import render
 from django.http import (HttpRequest, HttpResponse, HttpResponseForbidden,
                          HttpResponseNotFound, JsonResponse, QueryDict)
 from ..models import *
-from .SimulatedAnnealing import (SA_Step, SA_Clear_Data)
 from .GeneticAlgorithm import (GA_Step, GA_Clear_Data)
 
 def GA(request):
@@ -81,41 +80,4 @@ def GA_Clear(request):
   GA_Clear_Data()
   return JsonResponse({
     'success':  'GA data clear Successfully.'
-  })
-  
-
-def SA_step(request):
-  '''
-  Get data of every one percentage for the SA algorithm
-
-  GET Method with no param
-  
-  Return json:
-  {
-    SA: {
-      title: xxx,
-      process: xxx,
-      length: xxx,
-      coordinate: [[xxx,xxx],[xxx,xxx],[xxx,xxx]]
-    }
-  }
-  '''
-  temp = SA_Step()
-  SA = {
-    'title': 'Simulated Annealing',
-    'process': temp[1],
-    'coordinate': temp[0],
-    'length': temp[2]
-  }
-  return JsonResponse({
-    'SA': SA
-  })
-
-def SA_Clear(request):
-  '''
-  Clear data computed by previous SA steps
-  '''
-  SA_Clear_Data()
-  return JsonResponse({
-    'success':  'SA data clear Successfully.'
   })
