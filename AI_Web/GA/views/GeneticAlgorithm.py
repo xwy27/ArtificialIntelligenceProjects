@@ -1,6 +1,6 @@
 import math, copy, random, sys, time
 from datetime import datetime
-#from ..models import *
+from ..models import *
 
 
 
@@ -249,7 +249,7 @@ def getNeighborFieldRandom(listOfCities):
   return semiResult
 
 
-def GA():
+def GA_Cli():
   result = [x for x in range(1, len(points) + 1)]
   result.append(1)
   population = Population(result)
@@ -281,9 +281,9 @@ def GA():
   print('Final Score: ' + str(population.getResult()))
 
 
-
-f = open('./kroA150Pro.tsp', 'r')
-points = [(int(lines.split()[0]), int(lines.split()[1]), int(lines.split()[2])) for lines in f.readlines()]
+points = [[x.id, x.X, x.Y] for x in City.objects.all()]
+#f = open('./kroA150Pro.tsp', 'r')
+#points = [(int(lines.split()[0]), int(lines.split()[1]), int(lines.split()[2])) for lines in f.readlines()]
 distance = []
 
 
@@ -298,4 +298,54 @@ for pointX in points:
     else:
       distance[-1].append(distance[pointY[0] - 1][pointX[0] - 1])
 
-GA()
+#GA_Cli()
+
+def GA_Step():
+  global points
+
+  result = [x for x in range(1, len(points) + 1)]
+  result.append(1)
+  population = Population(result)
+  counter = 0
+
+  try:
+    tableItem = GAState.objects.get(id=0)
+    if tableItem.Process < 100:
+      counter = tableItem.Process
+      self.generation = tableItem.Generations
+      result = json.loads(tableItem.Path)
+  except GAState.DoesNotExist:
+    # Save data here
+    tableItem = GAState(0, 0, 0, json.dumps(result))
+ 
+  for _ in range(0, 4000):
+    population.update()
+    bestScore = population.getResult()
+  counter = counter + 1
+  
+  tableItem.Process = counter
+  tableItem.Generations = self.generation
+  tableItem.Path = json.dumps(result)
+  tableItem.save()
+  
+  toReturn = []
+  for city in result:
+    toReturn.append([points[city - 1][1], points[city - 1][2]])
+  
+  return toReturn, counter, bestScore
+
+
+def GA_Clear_Data():
+  global points
+  result = [x for x in range(1, len(points) + 1)]
+  result.append(1)
+
+  try:
+    ableItem = GAState.objects.get(id=0)
+    tableItem.Process = 0
+    tableItem.Generations = 0
+    tableItem.Path = json.dumps(result)
+  except GAState.DoesNotExist:
+    # Save data here
+    tableItem = GAState(0, 0, 0, json.dumps(result))
+  tableItem.save()
