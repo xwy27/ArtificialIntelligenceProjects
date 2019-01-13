@@ -1,6 +1,6 @@
 let generate = false; // whether generate algorithm
 let path = {}; // current city travel path
-let SA_refresh, LS_refresh;
+let SA_refresh, GA_refresh;
 
 // Abort all ajaxs:
 // Construct an arry to store all ajaxs
@@ -84,17 +84,17 @@ $(document).ready(() => {
   });
 });
 
-// Refresh LS chart
-function refreshLS(chartId) {
+// Refresh GA chart
+function refreshGA(chartId) {
   return function () {
     $.ajax({
       url: 'api/GA_step',
       data: '',
       type: 'GET',
       success: (res) => {
-        generateChart(res.LS, chartId);
-        if (res.LS.process < 100) {
-          LS = setTimeout(refreshLS(chartId), 1000);
+        generateChart(res.GA, chartId);
+        if (res.GA.process < 100) {
+          GA = setTimeout(refreshGA(chartId), 1000);
         }
       }
     });
@@ -124,7 +124,7 @@ $('#generate').on('click', () => {
   echarts.dispose(document.getElementById('GA-chart'));
   echarts.dispose(document.getElementById('SA-chart'));
   if (generate) {
-    LS = refreshLS('GA')();
+    GA = refreshGA('GA')();
     SA = refreshSA('SA')();
   } else {
     generateChart(path, 'GA');
@@ -136,7 +136,7 @@ $('#generate').on('click', () => {
 $('#clear').on('click', () => {
   generate = false;
   abortAll();
-  clearTimeout(LS);
+  clearTimeout(GA);
   clearTimeout(SA);
   echarts.dispose(document.getElementById('GA-chart'));
   echarts.dispose(document.getElementById('SA-chart'));
