@@ -56,3 +56,64 @@ python >= 3.0
 
 编写一个中国象棋博弈程序，要求用 alpha-beta 剪枝算法，可以实现人机对弈。
 棋局评估方法可以参考已有文献，要求具有下棋界面，界面编程也可以参考网上程序，但正式实验报告要引用参考过的文献和程序。
+
+## Genetic Algorithm
+
+用遗传算法求解TSP问题（问题规模等和模拟退火求解TSP实验同），要求：
+1. 设计较好的交叉操作，并且引入多种局部搜索操作（可替换通常遗传算法的变异操作）
+2. 和之前的模拟退火算法（采用相同的局部搜索操作）进行比较
+3. 得出设计高效遗传算法的一些经验，并比较单点搜索和多点搜索的优缺点。
+
+## Back Propagation Neural Network
+
+构造一个三层的BP神经网络，完成手写0-9数字的识别：
+1.	设计网络的结构，比如层数，每层的神经元数，单个神经元的输入输出函数；
+2.	根据数字识别的任务，设计网络的输入和输出；
+3.	实现BP网络的错误反传算法，完成神经网络的训练和测试，最终识别率达到70%以上；
+4.	数字识别训练集可以自己手工制作，也可以网上下载。
+
+## 项目描述
+
+由于小组采用 Django 完成可视化页面开发，所以前4个实验均集成于一个项目中，代码目录结构略微不同。
+
+1. 模拟退火算法源代码
+  `./ArtificialIntelligenceProjects/AI_Web/SA/views/LocalSearch.py`
+  `./ArtificialIntelligenceProjects/AI_Web/SA/views/SimulatedAnnealing.py`
+2. AStar算法源代码
+  `./ArtificialIntelligenceProjects/AI_Web/static/js/Astar/Astar.js`
+3. Alpha-Beta算法源代码
+  `./ArtificialIntelligenceProjects/AI_Web/static/js/ChineseChess/AI.js`
+4. 遗传算法源代码
+  `./ArtificialIntelligenceProjects/AI_Web/GA/views/GeneticAlgorithm.py`
+5. BP神经网络源代码
+  `./ArtificialIntelligenceProjects/AI_Web/NumRecognition/model/neuralNetwork.py`
+
+### 运行实验
+
+1. 前四个实验均在 WEB 页面中可视化输出，运行方法见前文描述
+2. BP神经网络使用终端交互，运行方法如下:
+  - 前往`./ArtificialIntelligenceProjects/AI_Web/NumRecognition/model` 文件目录
+  - 在终端运行如下命令:
+    ```shell
+    pip install numpy # 安装依赖，若有 numpy 则无需运行
+    python main.py
+    ```
+
+### 分工
+
+1. 徐伟元(xwy27)
+    - Alpha-Beta剪枝算法实验及报告
+    - BP神经网络算法实验(信息正向传播过程代码)
+    - 全部实验的 WEB 页面代码编写及项目文档编制
+
+2. 熊永琦(SiskonEmilia)
+    - 模拟退火算法实验及报告
+    - BP神经网络算法实验及报告(学习反向传播过程代码与数据导入代码)
+
+3. 李天译(Cynthiasky)
+    - AStar算法实验及报告
+    - 遗传算法实验及报告
+
+### 联系
+
+如果上述描述有不清晰或者在运行过程遇到问题，可以邮件联系 xuwy27@mail2.sysu.edu.cn，长期在线。
