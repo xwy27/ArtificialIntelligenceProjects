@@ -22,6 +22,10 @@ class Individual:
 
   def updateFitness(self):
     self.fitness = 1.0 / evaluate(self.gene)
+ 
+  def commaStr(self):
+    res = [str(x) for x in self.gene]
+    return ",".join(res)
 
 
 class Population:
@@ -36,8 +40,7 @@ class Population:
     self.result = Individual(initgene)
     self.result.updateFitness()
     #self.selectPool = []
-
-    self.ancients()
+    #self.ancients()
 
   def ancients(self):
     '''
@@ -52,8 +55,39 @@ class Population:
         self.result = tmp
       self.matingPool.append(tmp)
 
+  def setResult(self, gene):
+    self.result = Individual(gene)
+    self.result.updateFitness()
+
   def getResult(self):
     return evaluate(self.result.gene)
+
+  def getResultGene(self):
+    return self.result.gene
+  
+  def setAll(self, data):
+    if(data == ""):
+      ancients()
+
+    else:
+      self.matingPool = []
+      ind = data.split('$')
+      for item in ind:
+        gene = item.split(',')
+        # print(gene)
+        if len(gene) == 0:
+          continue
+        tmpind = Individual([int(x) for x in gene])
+        tmpind.updateFitness()
+        self.matingPool.append(tmpind)
+
+  def getAll(self):
+    result = ""
+    for i in range(len(self.matingPool)):
+      result += self.matingPool[i].commaStr()
+      if i != (len(self.matingPool) - 1):
+        result += "$"
+    return result
 
   def selectOne(self):
     '''
@@ -312,24 +346,31 @@ def GA_Step():
     tableItem = GAState.objects.get(id=0)
     if tableItem.Process < 100:
       counter = tableItem.Process
-      self.generation = tableItem.Generations
-      result = json.loads(tableItem.Path)
+      population.generation = tableItem.Generations
+      res = json.loads(tableItem.Path)
+      population.setResult(res)
+      population.setAll(tableItem.All)
+
   except GAState.DoesNotExist:
     # Save data here
-    tableItem = GAState(0, 0, 0, json.dumps(result))
- 
-  for _ in range(0, 4000):
-    population.update()
-    bestScore = population.getResult()
-  counter = counter + 1
+    #population.ancients()
+    tableItem = GAState(0, 0, 0, json.dumps(population.getResultGene()), population.getAll())
   
+  # population = Population(result)
+  for _ in range(0, 40):
+    population.update()
+  counter = counter + 1
+  bestScore = population.getResult()
+
   tableItem.Process = counter
-  tableItem.Generations = self.generation
-  tableItem.Path = json.dumps(result)
+  tableItem.Generations = population.generation
+  tableItem.Path = json.dumps(population.getResultGene())
+  tableItem.All = population.getAll()
   tableItem.save()
   
   toReturn = []
-  for city in result:
+  tmp = population.getResultGene()
+  for city in tmp:
     toReturn.append([points[city - 1][1], points[city - 1][2]])
   
   return toReturn, counter, bestScore
@@ -339,13 +380,17 @@ def GA_Clear_Data():
   global points
   result = [x for x in range(1, len(points) + 1)]
   result.append(1)
+  population = Population(result)
+  population.ancients()
+  tmpall = population.getAll()
 
   try:
-    ableItem = GAState.objects.get(id=0)
+    tableItem = GAState.objects.get(id=0)
     tableItem.Process = 0
     tableItem.Generations = 0
     tableItem.Path = json.dumps(result)
+    tableItem.All = tmpall
   except GAState.DoesNotExist:
     # Save data here
-    tableItem = GAState(0, 0, 0, json.dumps(result))
+    tableItem = GAState(0, 0, 0, json.dumps(result), tmpall)
   tableItem.save()

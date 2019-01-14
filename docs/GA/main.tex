@@ -170,17 +170,31 @@
 \subsection{测试结果}
 我们分别在进度为约 50\% 时和进度达到 100\% 时采集了数据，结果如 Figure 1 所示。
 
-%\begin{figure}
-%\centering
-%\includegraphics[width=\textwidth]{mid.png}
-%\includegraphics[width=\textwidth]{final.png}
-%\caption{\label{fig:final}50\% 和 100\% 进度时结果.}
-%\end{figure}
+其中，Figure 1 左侧均为遗传算法，右侧均为模拟退火算法，Process 为当前算法迭代完成进度，Length 为当前选定路径的路径长度。
 
-\subsubsection{模拟退火}
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{comphalf.png}
+\includegraphics[width=\textwidth]{compfinal.png}
+\caption{\label{fig:final}50\% 和 100\% 进度时结果.}
+\end{figure}
 
+\subsubsection{可视化对比}
+我们完成了基于网页界面的可视化对比输出，截取初始，16\% 和 100\% 进度下的对比图，结果如 Figure 2 所示。从可视化的界面中可以看出，SA 收敛速度比 GA 快（在迭代次数相差很大但更新速度相差不大的情况下），并且其最终结果要更优。
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{init.png}
+\includegraphics[width=\textwidth]{half.png}
+\includegraphics[width=\textwidth]{final.png}
+\caption{\label{fig:final}可视化对比}
+\end{figure}
 
 \subsubsection{遗传算法}
+由于开始种群未成熟，种群的多样性高，收敛速度很快，但到了搜索后期，随着种群逐渐成熟，对于新解的引入变差，收敛速度变得十分缓慢但依然可以看出是在逐渐收敛的，如果迭代足够多次数理论上也可以得到更好的结果。最终收敛在 28782.17 ，大约是最优解的108.5\%.
+
+\subsubsection{模拟退火}
+模拟退火算法一开始收敛速度并不快，甚至会有些时候得到的解在变差，但是在靠后的进度中它不断进步，最后收敛到 26833.31 ，约为最优解的 101.2\% ，比遗传算法约减少了 1949 
 
 
 \subsection{对比与总结}
